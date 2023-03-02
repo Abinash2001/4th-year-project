@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&family=Roboto:wght@300&display=swap');
+/* font-family: 'Noto Serif', serif;
+font-family: 'Roboto', sans-serif; */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --heading:black;
+    --para:#676767;
+    --btn:#92E0EB;
+    --bg:#EBFAFF;
+}
+body{
+    overflow-x: hidden;
+    background: var(--bg);
+}
+html{
+    font-size: 62.5%;
+    /* 1rem=10px */
+    overflow-x: hidden;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+li{
+    list-style: none;
+}
+h1,h2,h3{
+    font-family: 'Noto Serif', serif;
+    
+}
+h1{
+    font-size: 5rem;
+    font-weight: 700;
+}
+h2{
+    font-size: 3rem;
+}
+h3{
+    font-size: 2rem;
+    font-weight: 700;
+}
+p{
+    font-size: 2rem;
+    line-height: 1.5;
+    margin: 2rem;
+    padding: 1rem;
+    text-align: justify;
+    font-weight: 300;
+}
+
+/*--------------------
+        Header Section
+    ----------------------*/
+.header{
+    height: 5rem;
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 5rem;
+}
+.logo{
+    font-size: 2rem;
+}
+.navbar_list,.login_list{
+    display: flex;
+    gap: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.signup{
+    padding: 0.8rem 2rem;
+    background: black;
+    color: white;
+    border-radius: 1rem;
+    font-size: 1.8rem;
+}
+.navbar,.login,.logo{
+    margin: auto 1rem;
+}
+.navbar_link:active,
+.navbar_link:hover{
+    color:#1fdad2
+}
+.signup:active,
+.signup:hover{
+    color:black;
+    background-color: #1fdad2;
+}
+.mobile_navbar_btn{
+    display: none;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+.mobile_navbar_icon[name='close-outline']{
+    display: none;
+}
+/*-----------------------------
+        Reusable Section Code
+    --------------------------*/
+.section{
+    padding: 8rem 8rem 4rem 8rem;
+}
+.section_img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn{
+    padding: 1rem 3rem;
+    font-size: 2rem;
+    border: none;
+    border-radius: 2rem;
+    font-weight: bold;
+    display: inline-block;
+    background: var(--btn);
+}
+.btn:hover{
+    background-color: #1fdad2;
+}
+.btn_section{
+    display: flex;
+    gap: 2rem;
+}
+.grid{
+    display: grid;
+    gap: 10rem;
+}
+.container{
+    max-width: 140rem;
+    margin: 0 auto;
+}
+.grid_two_column{
+    grid-template-columns: repeat(2,1fr);
+}
+.grid_three_column{
+    grid-template-columns: repeat(3,1fr);
+}
+.container{
+    max-width: 140rem;
+    max-width: 0 auto;
+}
+/*-----------------------------
+        Main Section Code
+    --------------------------*/
+.section_main{
+    /* background-color: blue; */
+}
+.btn_section span{
+    
+}
+.main_img{
+    max-width: 70%;
+    border-radius: 10%;
+}
+
+/*-----------------------------
+        Need Info Section Code
+    --------------------------*/
+
+.need_list{
+    font-size: 2rem;
+    line-height: 1.5;
+    margin: 1.5rem;
+    padding: 1rem;
+    text-align: justify;
+    font-weight: 300;
+}
+.need_list li{
+    list-style: inside;
+}
+
+/*-----------------------------
+        Footrt Section Code
+    --------------------------*/
+.footer{
+    background-color: #b4ecff;
+}
+.section_footer_about p,.section_footer_help p{
+    font-size: 1.7rem;
+    margin: 0;
+}
+.section_footer_service ul{
+    padding: 1rem;
+}
+
+.section_footer_service li{
+    font-size: 1.7rem;
+}
+.footer_social_media{
+    margin: 2rem 0;
+    text-align: center;
+}
+.footer_social_media .icons{
+    width: 3rem;
+    height: 3rem;
+    display: inline-block;
+    position: relative;
+    padding: 2rem 2rem;
+}
+.footer_credits p{
+    text-align: center;
+    font-size: 1.7rem;
+}
+
+
+
+/*--------------------
+        reponsive Section
+    ----------------------*/
+    @media(max-width:980px){
+        html{
+            font-size: 52.5%;
+        }
+        .header{
+            position: relative;
+        }
+        .mobile_navbar_btn{
+            display: block;
+            z-index: 100;
+        }
+        .mobile_navbar_icon{
+            width: 4rem;
+            height: 4rem;
+        }
+        .navbar{
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            position: absolute;
+            display: flex;
+            top: 0;
+            left: 0;
+            background: rgb(255, 0, 0);
+            justify-content: center;
+            align-items: center;
+            transform: translateX(100%);
+            transition: all .3 linear;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .navbar_list{
+            flex-direction: column;
+            align-items: center;
+        }
+        .navbar_list .navbar_link{
+            font-size: 3rem;
+        }
+        .active .navbar{
+            transform: translate(0%);
+            opacity: 1;
+            visibility: visible;
+            position: fixed;
+            pointer-events: auto;
+            z-index: 99;
+        }
+        .active .mobile_navbar_btn .mobile_navbar_icon[name='menu-outline']{
+            display: none;
+        }
+        .active .mobile_navbar_btn .mobile_navbar_icon[name='close-outline']{
+            display: block;
+            position: fixed;
+            right: 5rem;
+            top: 2.5rem;
+        }
+        .grid{
+            gap: 3rem;
+        }
+    }
+
+    @media(max-width:875px){
+        html{
+            font-size: 51%;
+        }
+        .main_img{
+            max-width: 90%;
+        }
+    }
+    @media(max-width:750px){
+        html{
+            font-size: 55%;
+        }
+        .section{
+            padding: 5rem;
+        }
+        /*hero section*/
+        .section .grid_two_column{
+            grid-template-columns: 1fr;
+        }
+        .section_main_data{
+            text-align: center;
+            gap:1.5rem
+        }
+        .main_img{
+            max-width: 70%;
+        }
+        /*need section*/
+        .section_need .section_data{
+            order: -1;
+        }
+        /*footer*/
+        .footer .grid_three_column{
+            grid-template-columns: repeat(2,1fr);
+        }
+        .footer .grid_three_column .section_footer_about{
+            grid-column: 1/-1;
+        }
+
+    }
+    @media(max-width:500px){
+        html{
+            font-size: 50%;
+        }
+    }
+    @media(max-width:400px){
+        html{
+            font-size: 48%;
+        }
+    }
