@@ -1,0 +1,246 @@
+body {
+  background-color: #EBFAFF;
+  /* line-height: normal; */
+  margin: 0;
+}
+
+/* Navbar Section */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  background-color: #F6EDED;
+}
+
+.logo-container {
+  width: 20%;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.nav-container {
+  width: 60%;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-items li {
+  margin: 0 10px;
+}
+
+.profile-container {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-link {
+  display: block;
+  height: 100%;
+}
+
+
+/* region_of_voting container */
+.region_container{
+  margin: 50px;
+}
+
+/* Note Section */
+.note {
+  background-color: #F6EDED;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+.note h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.note p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* region_of_voting */
+.region_box {
+  background-color: #F6EDED;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  padding: 20px;
+  display: flex;
+  border-radius: 10px;
+}
+.region_box_content h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.region_box_content p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.region_box .button {
+  background-color: #1d8c4a;
+  color: #fff;
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  border-radius: 20px;
+}
+.region_box .button:hover {
+  background-color: #0ba235;
+}
+.region_box_content p {
+  font-weight: bold;
+}
+.region_box_btn{
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.region_box_content{
+  width: 80%;
+  padding: 15px;
+}
+
+/* Footer Section */
+footer {
+  background-color: #b4ecff;
+  padding: 50px 0;
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+}
+.footer_container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.about {
+  flex-basis: 30%;
+  font-size: 18px;
+}
+.about h3 {
+  margin-bottom: 20px;
+}
+.service {
+  flex-basis: 15%;
+}
+.service h3 {
+  margin-bottom: 20px;
+}
+.service ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.service li {
+  font-size: 18px;
+  line-height: 0.3;
+  padding: 10px 0 10px 0;
+}
+.contact{
+  flex-basis: 20%;
+}
+.contact h3 {
+  margin-bottom: 20px;
+}
+.contact ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.contact li {
+  font-size: 18px;
+  line-height: 0.3;
+  padding: 10px 0 10px 0;
+}
+.disclaimer p{
+  text-align: center;
+  font-size: 18px;
+}
+ 
+
+
+
+
+
+@media only screen and (max-width: 428px) {
+.navbar {
+padding: 15px;
+}
+.logo-container {
+width: 20%;
+}
+.nav-container {
+width: 40%;
+}
+.nav-items li {
+margin: 0 5px;
+}
+.profile-container {
+width: 20%;
+}
+.region_container{
+margin: 20px;
+}
+.region_box {
+flex-direction: column;
+}
+.region_box_btn{
+width: 100%;
+margin-top: 10px;
+}
+.region_box_content{
+width: 100%;
+text-align: center;
+padding: 0;
+}
+.region_box_content h2{
+text-align: center;
+}
+.about, .service, .contact {
+flex-basis: 100%;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
