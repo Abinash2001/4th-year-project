@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="Registration_form.css">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="Registration_form.js"></script>
     <title class="title">Register</title><!--Change the text to "Register"-->
 </head>
 
@@ -19,66 +20,82 @@
             <div class="application_details">
                 <div class="box">
                     <h4>Name</h4>
-                    <select name="prefix" id="prefix" required>
-                        <option value="">Select</option>
-                        <option value="Mr.">Mr.</option>
-                        <option value="Miss">Miss</option>
-                        <option value="Mrs.">Mrs.</option>
-                    </select>             
-                    <input type="text" placeholder="First Name*" required />
-                    <input type="text" placeholder="Second Name*" />
-                    <input type="text" placeholder="Last Name*" required />
+                    <div class="name_details boxes">
+                        <select name="prefix" id="prefix" required>
+                            <option value="">Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Mrs.">Mrs.</option>
+                        </select>             
+                        <input type="text" placeholder="First Name*" required />
+                        <input type="text" placeholder="Second Name*" />
+                        <input type="text" placeholder="Last Name*" required />
+                    </div>
                 </div>
                 <div class="box">
                     <h4>Date of Birth</h4>
-                    <input type="search" placeholder="Day*" required />
-                    <input type="search" placeholder="Month*" required />
-                    <input type="search" placeholder="Year*" required />
+                    <div class="dob_details boxes">
+                        <input type="search" placeholder="Day*" required />
+                        <input type="search" placeholder="Month*" required />
+                        <input type="search" placeholder="Year*" required />
+                    </div>
                 </div>
                 <div class="box">
                     <h4>Current Age</h4>
-                    <input type="text" placeholder="Year*" required />
-                    <input type="text" placeholder="Month*" required />
-                    <input type="text" placeholder="Day*" required />
+                    <div class="curr_age boxes">
+                        <input type="text" placeholder="Year*" required />
+                        <input type="text" placeholder="Month*" required />
+                        <input type="text" placeholder="Day*" required />
+                    </div>
                 </div>
             </div>
 
             <h2>Aplicant's Address</h2>
             <div class="box">
                 <h4>Permanent Address</h4>
-                <input type="text" placeholder="House no.* " required />
-                <input type="text" placeholder="Street/Area/Locality*" required />
-                <input type="text" placeholder="City*" required />
-                <input type="text" placeholder="District*" required />
-                <input type="text" placeholder="Post Office*" required />
-                <input type="text" placeholder="Police Station*" required />
-                <input type="text" placeholder="Pin Code*" required />
-                <input type="text" placeholder="Country*" required />
+                <div class="perma_address boxes">
+                    <input type="text" class="perma_house" placeholder="House no.* " required />
+                    <input type="text" class="perma_area" placeholder="Street/Area/Locality*" required />
+                    <input type="text" class="perma_city" placeholder="City*" required />
+                    <input type="text" class="perma_district" placeholder="District*" required />
+                    <input type="text" class="perma_po" placeholder="Post Office*" required />
+                    <input type="text" class="perma_ps" placeholder="Police Station*" required />
+                    <input type="text" class="perma_pin" placeholder="Pin Code*" required />
+                    <input type="text" class="perma_country" placeholder="Country*" required />
+                </div>
             </div>
-            <div class="checkbox">
-            <input type="checkbox" class="checkbox" id="Address" name="Address">
+            <div class="checkbox_div">
+                <input type="checkbox" class="checkbox" id="chk" onclick="address_function()" name="checkbox">
                 <label for="Address">Current Address same as Permanent Address</label>
             </div>
             
             <div class="box">
-                <input type="text" placeholder="House no.*" required />
-                <input type="text" placeholder="Street/Area/Locality*" required />
-                <input type="text" placeholder="City*" required />
-                <input type="text" placeholder="District*" required />
-                <input type="text" placeholder="Post Office*" required />
-                <input type="text" placeholder="Police Station*" required />
-                <input type="text" placeholder="Pin Code*" required />
-                <input type="text" placeholder="Country*" required />
+                <div class="curr_address boxes">
+                    <input type="text" class="curr_house" placeholder="House no.*" required />
+                    <input type="text" class="curr_area" placeholder="Street/Area/Locality*" required />
+                    <input type="text" class="curr_city" placeholder="City*" required />
+                    <input type="text" class="curr_district" placeholder="District*" required />
+                    <input type="text" class="curr_po" placeholder="Post Office*" required />
+                    <input type="text" class="curr_ps" placeholder="Police Station*" required />
+                    <input type="text" class="curr_pin" placeholder="Pin Code*" required />
+                    <input type="text" class="curr_country" placeholder="Country*" required />
+                </div>
             </div>
 
             <h2>Details of voter’s photo identity card</h2>
             <div class="box">
-            <input type="search" placeholder="Aadhar no.* " required />
-            <input type="text" placeholder="Confirm Aadhar No.*" required />
-            <input type="text" placeholder="Phone No.*" required />
-            <input type="text" placeholder="Alternate Phone No.*" required />
-            <input type="text" placeholder="Email*" required />
-            <input type="text" placeholder="Alternate email*" required />
+            <div class="voter_details boxes">
+                <div class="boxes_1">
+                    <input type="text" placeholder="Aadhar no.* " required />
+                    <input type="text" placeholder="Phone No.*" required />
+                    <input type="email" placeholder="Email*" required />
+                </div>
+                <div class="boxes_1">
+                    <input type="text" placeholder="Confirm Aadhar No.*" required />
+                    <input type="text" placeholder="Alternate Phone No.*" required />
+                    <input type="email" placeholder="Alternate email*" required />
+                </div>
+            </div>
             </div>
             <h2>Upload Documents</h2>
             <div class="upload">
