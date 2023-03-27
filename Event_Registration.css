@@ -154,6 +154,9 @@ button:hover {
   display: flex;
   justify-content: center;
 }
+.Registration_container{
+  border: black;
+}
 .datetime{
   display: flex;
 }
