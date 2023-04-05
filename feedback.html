@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback_Page</title>
+    <link rel="stylesheet" href="feedback.css">
+    <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+    <!-- font Awesome CDN -->
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h3>Enter Your Feedback</h3>
+        <div class="rating_box">
+            <div class="emoji">
+                <div id="emoji">
+                <img src="images/poor.png" alt="poor">
+                <img src="images/bad.png" alt="bad">
+                <img src="images/okay.png" alt="okay">
+                <img src="images/good.png" alt="good">
+                <img src="images/excellent.png" alt="excellent">
+                </div>
+            </div>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+            <div class="message-box">
+                <textarea id="msg" cols="30" rows="10" placeholder="Message"></textarea>
+            </div>
+            <div class="btn_box">
+            <button id="btn">
+                <p id="btnText">Submit</p>
+                <div class="check-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                </svg>
+                </div>
+            </button>
+            <a href="login.html" class="skip-link" id="skipBtn">
+                <p>Skip</p>
+                <div class="check-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                </svg>
+                </div>
+            </a>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="feedback.js"></script>
+</body>
+</html>
