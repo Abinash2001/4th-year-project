@@ -1,0 +1,227 @@
+body{
+    background-color: #D0F1F6;
+}
+#t{
+    overflow-x: auto;
+}
+table{
+    margin:0;
+    width:100%;
+    border-collapse: collapse;
+}
+.table-head{
+    font-style:Bold;
+    font-size: 26;
+    color:#666666;
+    padding: 0;
+    margin:0;
+}
+.details{
+    font-style:Bold;
+    font-size: 26;
+    color:#666666;
+    padding: 0;
+    margin:0;
+
+}
+h2{
+color:black;
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+}
+td{
+    font-weight: bolder;
+}
+.table-data2{
+    color: red;
+    align-content: center;
+    padding:0;
+    margin:0;
+    font-size: 30px;
+    background-color: #D9D9D9;
+    text-align: center;
+    border: 0.1rem black solid;
+
+}
+#filter
+{
+    position:top center;
+    padding: 10px 300px !important;
+}
+
+.table-data{
+    align-content: center;
+    text-align: center;
+    padding:0;
+    margin:0;
+    font-size: 20px;
+    background-color: #D9D9D9;
+    
+    border: 0.1rem black solid;
+    height: 2.2rem;
+    height: 40px;
+    /* align-content: center;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    height: 40px;
+    border: 2px black solid;
+    font-size: 20px;
+    background-color: #D9D9D9;*/
+}
+.table-data1{
+    align-content: center ;
+    
+    align-items:center;
+    justify-content: center;
+
+    padding: 0;
+    margin:0;
+    font-size: 30px;
+    background-color: #D9D9D9;
+    
+    height: 40px;
+    border: 0.1rem black solid;
+    /*align-content: center;
+    /* text-align: center; */
+   /* align-items: center;
+    padding: 0;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    margin: 0;
+    border: 0.1rem black solid;
+    font-size: 30px;
+    background-color: #D9D9D9;
+    /*border-radius: 10px;*/
+}
+.table-data1 :hover{
+color: hsl(0, 0%, 0%);
+background-color: rgb(255, 255, 0);
+}
+.approv{
+    padding: 0;
+    font-size: 15px;
+    width: 150px;
+    height: 25px;
+    background-color: #92E0EB;
+    border-radius: 1px;
+    border-color: whitesmoke;
+}
+.not-approv{
+    padding: 0;
+    
+    text-align: center;
+    border-color: whitesmoke;
+    /* margin: 1000px; */
+   font-size: 15px;
+    width: 150px;
+    height: 25px;
+    background-color: #98A6F6;
+    border-radius: 1px;
+}
+.page
+{
+    align-content: center;
+    padding:5px 5px;
+    margin:10px;
+    font-size: 26;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+}
+#break
+{
+    padding:10px 0px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+/*.popup .overlay{
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    background:rgba(0,0,0,0.7);
+    z-index:1;
+    display:none;
+}
+.popup .content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    background:#fff;
+    width:450px;
+    height:220px;
+    z-index:2;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+}
+.popup .close-button{
+    position:absolute;
+    cursor:pointer;
+    right:20px;
+    top:20px;
+    width:30px;
+    height:30px;
+    background:#222;
+    color:#fff;
+    font-size:25px;
+    font-weight: 600;
+    line-height:30px;
+    text-align:center;
+    border-radius:50%;
+}
+.popup .active.overlay{
+display:block;
+}
+.popup.active.content{
+    transition:all 300ms ease-in-out;
+    transform:translate(-50%,-50%) scale(1);
+}*/
+.container #id .active{
+    filter:blur(1px);
+    color:rgba(0,0,0,.30);
+    pointer-events:none;
+    user-select:none;
+}
+#popup{
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:600px;
+    padding: 50px;
+    text-align:center;
+    box-shadow: 0px 5px 30px rgba(0,0,0,.30);
+    background:#e2b2f3;
+    visibility:hidden;
+    opacity:0;
+    transition:0.5s;
+}
+#popup.active{
+    top:50%;
+    visibility:visible;
+    opacity:1;
+    transition:0.5s;
+}
+#close{
+    padding:0px;
+    margin:0px;
+    font: 20px;
+    color:white;
+    background-color: #666666;
+    position:top right;
+    text-align:center;
+}
+.popup h1{
+    margin:0px;
+    padding:0px;
+}
+.popup p{
+    margin:0px;
+    padding:0px;
+}
