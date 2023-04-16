@@ -3,8 +3,15 @@
     padding: 0;
     box-sizing: border-box;
 }
+:root{
+    --bg:#EBFAFF;
+    --white:white;
+    --input_bg:gainsboro;
+    --btn:#92E0EB;
+    --btn_helper:#1fdad2;
+}
 body{
-    background: #EBFAFF;
+    background: var(--bg);
 }
 html{
     font-size: 62.5%;
@@ -17,9 +24,17 @@ html{
     height: 100vh;
 }
 .login_container{
-    background: white;
+    background: var(--white);
     width: 40rem;
     height: 40rem;
+    /* border: none; */
+    border-radius: 2rem;
+    border: 0.2rem black solid
+}
+.regisation_container{
+    background: var(--white);
+    width: 40rem;
+    height: 47rem;
     /* border: none; */
     border-radius: 2rem;
     border: 0.2rem black solid
@@ -38,7 +53,7 @@ html{
     margin: 5rem 0;
 }
 input{
-    background: gainsboro;
+    background: var(--input_bg);
     width: 80%;
     height: 4rem;
     font-size: 1.5rem;
@@ -48,20 +63,30 @@ input{
     border-radius: 1rem;
 }
 .btn{
-    width: 10rem;
-    height: 3rem;
+    width: 80%;
+    height: 4rem;
     font-size: 1.5rem;
     border: none;
     border-radius: 2rem;
     font-weight: 700;
-    background: #92E0EB;
+    background: var(--btn);
 }
 .btn:hover{
-    background-color: #1fdad2;
+    background-color: var(--btn_helper);
 }
 .btn_section{
     display: flex;
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+}
+.forget,.sigup{
+    text-align: center;
+    margin: 1rem;
+    font-size: 1.4rem;
+}
+.forget a,.sigup a{
+    font-size: 1.4rem;
+    text-decoration: none;
+    color: blue;
 }
