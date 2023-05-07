@@ -1,4 +1,20 @@
 <?php
+    $config = array(
+        "private_key_bits" => 2048,
+        "private_key_type" => OPENSSL_KEYTYPE_RSA,
+    );
+    
+    // Create the key pair
+    $res = openssl_pkey_new($config);
+    
+    // Get the private key
+    openssl_pkey_export($res, $private_key);
+    
+    // Get the public key
+    $public_key = openssl_pkey_get_details($res);
+    $public_key = $public_key["key"];
+
+    // var_dump($public_key);
     if($_SERVER["REQUEST_METHOD"]=="POST" and isset($_POST['submit']))
     {
         include('dbconnection.php');
@@ -24,36 +40,43 @@
         $currPs=$_POST['curr_ps'];
         $currPin=$_POST['curr_pin'];
         $currCountry=$_POST['curr_country'];
-        $aadhar=$_POST['aadhar'];
+        // $aadhar=$_POST['aadhar'];
+        openssl_public_encrypt($_POST['aadhar'], $aadhar, $public_key);
         $phone=$_POST['phone'];
         $email=$_POST['email'];
-        $c_aadhar=$_POST['c_aadhar'];
+        // $c_aadhar=$_POST['c_aadhar'];
+        openssl_public_encrypt($_POST['c_aadhar'], $c_aadhar, $public_key);
         $Aphone=$_POST['a_phone'];
         $Aemail=$_POST['a_email'];
-        $pass=$_POST['password'];
-        $c_pass=$_POST['c_password'];
-
+        // $pass=$_POST['password'];
+        openssl_public_encrypt($_POST['password'],$pass, $public_key);
+        // $c_pass=$_POST['c_password'];
+        openssl_public_encrypt($_POST['c_password'], $c_pass, $public_key);
         $file_f_aadhar=$_FILES['f_aadhar_pic'];
         $file_f_aadhar_name=$file_f_aadhar['name'];
         $file_f_aadhar_path=$file_f_aadhar['tmp_name'];
-        $destfile__f_aadhar="upload_image/".$file_f_aadhar_name;
-        move_uploaded_file($file_f_aadhar_path,$destfile__f_aadhar);
+        $destfile_f_aadhar="image/".$file_f_aadhar_name;
+        move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
         
         $file_b_aadhar=$_FILES['b_aadhar_pic'];
         $file_b_aadhar_name=$file_b_aadhar['name'];
         $file_b_aadhar_path=$file_b_aadhar['tmp_name'];
-        $destfile__b_aadhar="upload_image/".$file_b_aadhar_name;
-        move_uploaded_file($file_b_aadhar_path,$destfile__b_aadhar);
+        $destfile_b_aadhar="image/".$file_b_aadhar_name;
+        move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
         
         $file_userPic=$_FILES['user_pic'];
         $file_userPic_name=$file_userPic['name'];
         $file_userPic_path=$file_userPic['tmp_name'];
-        $destfile__userPic="upload_image/".$file_userPic_name;
-        move_uploaded_file($file_userPic_path,$destfile__userPic);
-
-
-        $sql="INSERT INTO `registration`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `c_password`, `aadhar`, `c_aadhar`, `phone`, `a_phone`, `email`, `a_email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$c_pass','$aadhar','$c_aadhar','$phone','$Aphone','$email','$Aemail','$destfile__f_aadhar','$destfile__b_aadhar','$destfile__userPic')";
-        $result=mysqli_query($conn,$sql);
+        $destfile_userPic="image/".$file_userPic_name;
+        move_uploaded_file($file_userPic_path,$destfile_userPic);
+    $sql="INSERT INTO `registration`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `c_password`, `aadhar`, `c_aadhar`, `phone`, `a_phone`, `email`, `a_email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$c_pass','$aadhar','$c_aadhar','$phone','$Aphone','$email','$Aemail','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
+    $result=mysqli_query($conn,$sql);
+        $query="select * from `registration` where id=(select max(id) from registration)";
+        $result=mysqli_query($conn,$query);
+        $row = $result->fetch_assoc();
+        $user_id=$row['id'];
+        $query="INSERT INTO `key`( `user_id`, `public_key`, `private_key`) VALUES ('$user_id','$public_key','$private_key')";
+        $result=mysqli_query($conn,$query);
     }
 ?>
 <!DOCTYPE html>
@@ -71,7 +94,7 @@
 </head>
 
 <body>
-    <form action="#" method='POST' enctype="multipart/form-data">
+    <form action="" method='POST' enctype="multipart/form-data">
         <div class="container">
             <h1 class="heading">E-Registration</h1>
             <h2>Aplicant's Details</h2>
@@ -141,13 +164,13 @@
             <div class="box">
             <div class="voter_details boxes">
                 <div class="boxes_1">
-                    <input type="text" name="aadhar" placeholder="Aadhar no.* " required />
-                    <input type="text" name="phone" placeholder="Phone No.*" required />
+                    <input type="number" name="aadhar" placeholder="Aadhar no.* " required />
+                    <input type="tel"  maxlength="10" name="phone" placeholder="Phone No.*" required />
                     <input type="email" name="email" placeholder="Email*" required />
                 </div>
                 <div class="boxes_1">
-                    <input type="text" name="c_aadhar" placeholder="Confirm Aadhar No.*" required />
-                    <input type="text" name="a_phone" placeholder="Alternate Phone No.*" required />
+                    <input type="number" name="c_aadhar" placeholder="Confirm Aadhar No.*" required />
+                    <input type="tel" maxlength="10" name="a_phone" placeholder="Alternate Phone No.*" required />
                     <input type="email" name="a_email" placeholder="Alternate email*" required />
                 </div>
             </div>

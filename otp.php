@@ -1,5 +1,18 @@
 <?php
-    function sendOTP($email, $otp) {
+    session_start();
+    include('dbconnection.php');
+    if(isset($_SESSION['userId'])){
+        $user_id=$_SESSION['userId'];
+        $sql="select * from registration where id='$user_id'";
+        $result = mysqli_query($conn,$sql);
+        $count  = mysqli_num_rows($result);
+        $row=$result->fetch_assoc();
+        if($count==1) {
+            // generate OTP
+            $otp = rand(100000,999999);
+        } else {
+            $error_message = "Email not exists!";
+        }
         include('smtp/PHPMailerAutoload.php');
 
         $message_body = "One Time Password for PHP login authentication is:<br/><br/>".
@@ -16,10 +29,11 @@
         $mail->Username = "d7482935@gmail.com";
         $mail->Password = "kjtyevnhutpsfthw";
         $mail->SetFrom("d7482935@gmail.com");
+        $mail->isHTML(true);
         $mail->Subject = "OTP to Login";
         $mail->MsgHTML ($message_body);
         $mail->Body =$otp;
-        $mail->AddAddress($email);
+        $mail->AddAddress($row['email']);
         $mail->SMTPOptions=array('ssl'=>array(
             'verify_peer'=>false,
             'verify_peer_name'=>false,
@@ -30,48 +44,9 @@
             echo "Mailer Error: " . $mail->ErrorInfo;
         }
         else {
-            return $result;
+            $sql="INSERT INTO `otp_expiry`(`user_id`, `otp`, `is_expired`) VALUES ('$user_id','$otp','0')";
+            $result=mysqli_query($conn,$sql);
+            header('location:mail.php');
         }
-        // if(!$mail->Send()){
-        //     echo $mail->ErrorInfo;
-        // }else{
-        //     return 'Sent';
-        // }
-
-
-
-
-
-
-    //     // $mail->AddReplyTo('namanch2001@gmail.com', 'abiansh Kumar Chourasia');
-    //     // $mail->SetFrom('namanch2001@gmail.com','abiansh Kumar Chourasia',0);
-    //     // $mail->AddAddress ($email);
-    //     // $mail->Subject= "OTP to Login";
-    //     // $mail->MsgHTML ($message_body);
-        
-    //     $mail->isSMTP();                                         
-    //     $mail->Host       = 'smtp.example.com';                     
-    //     $mail->SMTPAuth   = true;                                   
-    //     $mail->Username   = 'd7482935@gmail.com';                     
-    //     $mail->Password   = 'lqbezwcpisujmtmd';                              
-    //     $mail->SMTPSecure = 'ssl';    
-    //     $mail->Port       = 25;
-        
-    //     $mail->SetFrom('d7482935@gmail.com','Hacker Devil');
-    //     $mail->AddAddress ($email);
-    //     $mail->isHTML(true);                                  //Set email format to HTML
-    //     $mail->Subject= "OTP to Login";
-    //     $mail->MsgHTML ($message_body);
-
-    // // $mail->Subject = 'Here is the subject';
-    // // $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-    // // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-    //     $result=$mail->send();
-    //     if (!$result) {
-    //         echo "Mailer Error: " . $mail->ErrorInfo;
-    //     }else {
-    //         return $result;
-    //     }
     }
 ?>

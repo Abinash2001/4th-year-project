@@ -1,0 +1,150 @@
+body{
+    background-color: #D0F1F6;
+}
+.complaint{
+    overflow-x: auto;
+    padding: 10px;
+}
+table{
+    margin:0;
+    width:100%;
+    border-collapse: collapse;
+}
+.table-head{
+    color:#666666;
+    padding: 0;
+    margin:0;
+}
+.details{
+    font-style:Bold;
+    font-size: 26;
+    color:#666666;
+    padding: 0;
+    margin:0;
+
+}
+h2{
+color:black;
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+}
+td{
+    font-weight: bolder;
+}
+.table-data2{
+    color: red;
+    
+
+}
+#filter
+{
+    position:top center;
+    padding: 10px 300px;
+}
+
+.table-data{
+    align-content: center;
+    text-align: center;
+    padding:0;
+    margin:0;
+    font-size: 20px;
+    background-color: #D9D9D9;
+    border: 0.1rem black solid;
+    height: 40px;
+}
+
+.table-data1 :hover{
+color: hsl(0, 0%, 0%);
+background-color: rgb(255, 255, 0);
+}
+.approv{
+    padding: 0;
+    font-size: 15px;
+    width: 150px;
+    height: 25px;
+    background-color: #92E0EB;
+    border-radius: 1px;
+    border-color: whitesmoke;
+}
+.not-approv{
+    padding: 0;
+    
+    text-align: center;
+    border-color: whitesmoke;
+   font-size: 15px;
+    width: 150px;
+    height: 25px;
+    background-color: #98A6F6;
+    border-radius: 1px;
+}
+.page
+{
+    align-content: center;
+    padding:5px 5px;
+    margin:10px;
+    font-size: 26;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+}
+#break
+{
+    padding:10px 0px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.container #id .active{
+    filter:blur(1px);
+    color:rgba(0,0,0,.30);
+    pointer-events:none;
+    user-select:none;
+}
+#popup{
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:600px;
+    padding: 50px;
+    text-align:center;
+    box-shadow: 0px 5px 30px rgba(0,0,0,.30);
+    background:#e2b2f3;
+    visibility:hidden;
+    opacity:0;
+    transition:0.5s;
+}
+#popup.active{
+    top:50%;
+    visibility:visible;
+    opacity:1;
+    transition:0.5s;
+}
+#close{
+    padding:5px;
+    margin:15px;
+    color:white;
+    background-color: #666666;
+}
+.popup p{
+    margin:10px;
+    padding:10px;
+    font-size: 22px;
+}
+.popup{  
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    height: auto;
+}
+.datetime {
+    font-size: 15px;
+}
+.complaint{
+    height: 250px;
+    width: 600px;
+    background: #e9e9e9;
+}
+

@@ -1,11 +1,22 @@
 <?php
 include("dbconnection.php");
-// session_start();
-// $userID=$_SESSION['userId'];
-$sql="select * from candidate_details";
+session_start();
+$userID=$_SESSION['userId'];
+$eventId= $_SESSION['eventID'];
+if(!isset($_SESSION["eventID"]))
+    {
+        header("location:region.php");
+    }
+if(!isset($userID))
+{
+    header("location:logout.php");
+}
+$sql="select * from candidate_details where event_id=$eventId";
 $query=$conn->query($sql);
-$userId=123456789126;
-$eventId=123456789123;
+$sql1="select * from event_registration where id=$eventId";
+$query1=$conn->query($sql1);
+$row1=$query1->fetch_assoc()
+// $userId=123456789126;
 ?>
 
 
@@ -24,8 +35,8 @@ $eventId=123456789123;
     <body>
         <div class="voting_container">
             <div class="voting_note">
-                <!-- <img src="vote.png"> -->
-                <p>Click To the ‘vote’ button below and let win to your desirable candidate</p>
+                <img src="image/vote.png">
+                <p><?php echo $row1['event_detail']?></p>
             </div>
             <div class="Voting_area">
                 <?php 
@@ -49,7 +60,8 @@ $eventId=123456789123;
                 <?php
                 $i++;
                 }
-                $json = json_encode($emptyArray);
+                $_SESSION['condidateIdArray']=$emptyArray;
+                // $json = json_encode($emptyArray);
                 // echo $emptyArray[1];
                 // var_dump($emptyArray);
                 // var_dump($json);
@@ -60,106 +72,21 @@ $eventId=123456789123;
 </html>
 <script type="text/javascript">
     
-    function voting(datavalue){
-    console.log(datavalue);
+    function voting(index){
     // Make an AJAX request to the PHP script
     $.ajax({
         url: 'votingJS.php',
         type: 'POST',
-        data:{json:<?php echo $json?>,
-            data:datavalue,
-            userid:<?php echo $userId ?>,
-            eventid:<?php echo $eventId ?>
+        data:{
+            data:index
         },
-        success: function(response) {
-            console.log(response);
+        success: function() {
+           // redirect to another page
+           window.location = "feedback.php";
         },
-        error: function(xhr, status, error) {
-            console.log('Error: ' + error);
+        error: function() {
+           alert('Error occurred');
         }
     });
 }
-
-
-
-
-
-
-
-
-
-// $(document).ready(function(){
-// $('.button').click(async function(){
-//     var xhttp = new XMLHttpRequest();
-//     xhttp.onreadystatechange = function() {
-//       if (this.readyState == 4 && this.status == 200) {
-//         console.log("True");
-//       }
-//       else{
-//         console.log("false");
-//       }
-//     };
-//     var Status = $(this).val();
-//     console.log(datavalue);
-//     alert("ok");
-//     $.ajax({
-//         url:'votingJS.php',
-//         method:'POST',
-//         data:{json:<?php //echo $json?>,
-//             data:datavalue,
-//             userid:<?php //echo $userId ?>,
-//             eventid:<?php //echo $eventId ?>
-//         },
-//         success:function(result){
-//            console.log(result) ;
-//         },
-//         error:function(result){
-//            console.log('chourasia') ;
-//         }
-//     });
-//     alert("90");
-// });
-// });
-
-    
-    // $(document).ready(function(){
-    // function voting(datavalue){
-    //     console.log(datavalue);
-    //     // alert("ok");
-    //     <?php 
-    //         $index="datavalue";
-    //         echo $index;
-    //     ?>
-        // $.ajax({
-        //     url:'votingJS.php',
-        //     method:'POST',
-        //     data:{json:<?php //$json?>,
-        //         data:datavalue,
-        //         userid:<?php //echo $userId ?>,
-        //         eventid:<?php //echo $eventId ?>
-        //     },
-        //     success:function(result){
-        //        console.log(result) ;
-        //     },
-        //     error:function(result){
-        //        console.log('chourasia') ;
-        //     }
-        // });
-        // alert("90");
-    // };
-    // });
-
-
-    // $(document).ready(function(){
-    //     // function voting(datavalue){
-    //         $.ajax({
-    //             url:'votingJS.php',
-    //             method:'POST',
-    //             data:{//candpost:datavalue,
-    //             userid:<?php //echo $userId?>,
-    //             eventid:<?php //echo $eventId?>
-    //         }
-    //         });
-    //     // }
-    // });
 </script>

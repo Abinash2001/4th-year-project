@@ -1,8 +1,40 @@
 <?php
+session_start();
 include("dbconnection.php");
-$sql="select * from registration where type='user' and status='pending' and id='123456789132'";
+$userId=$_SESSION['id'];
+$sql="select * from registration where id=$userId";
 $query=$conn->query($sql);
-$row = $query->fetch_assoc();
+$row1 = $query->fetch_assoc();
+// if($row['status']=='active')
+// {
+
+// }
+// else{
+    if(isset($_POST['approve']) && $row1['status']!='active')
+    {
+        $sql="UPDATE registration SET `status` ='active' WHERE id = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        unset($_SESSION["id"]);
+        header('location:pending_user_verification.php');
+    }
+    else if(isset($_POST['reject']))
+    {
+        $sql="DELETE from `key` WHERE user_id  = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        $sql="DELETE from registration WHERE id = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        unset($_SESSION["id"]);
+        header('location:pending_user_verification.php');
+    }
+    else if(isset($_POST['back']))
+    {
+        unset($_SESSION["id"]);
+        header('location:active_user_verification.php');
+    }
+    $sql="select * from registration where type='user' and status='pending' and id='$userId'";
+    $query=$conn->query($sql);
+    $row = $query->fetch_assoc();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +52,7 @@ $row = $query->fetch_assoc();
 </head>
 
 <body>
-    <form action="registration.php" method='POST'>
+    <form action="" method='POST'>
         <div class="container">
             <h1 class="heading">E-Registration</h1>
             <h2>Aplicant's Details</h2>
@@ -65,8 +97,7 @@ $row = $query->fetch_assoc();
                     </div>
                 </div>
             </div>
-
-            <h2>Aplicant's Address</h2>
+            <h2>Applicant's Address</h2>
             <div class="box">
                 <h4>Permanent Address</h4>
                 <div class="perma_address boxes">
@@ -200,13 +231,42 @@ $row = $query->fetch_assoc();
                     <label for="voter_img">Voter’s Photo</label>
                 </div>
             </div>
-            
             <div class="submit">
-            <button type="submit">Submit</button>
-            </div>
+            <?php
+            if($row1['status']=='active')
+            {
+            ?> 
+                <button type="submit" name="back">Back</button>
+            <?php
+            }
+            else{
+            ?>
+            <button type="submit" name="approve">Approve</button>
+            <button type="submit" name="reject">Reject</button>
+            <?php
+            }
+            ?>
+            </div> 
         </div>
         
     </form>
 </body>
 <script src="registration.js"></script>
 </html>
+
+<?php
+// if(isset($_POST['approve']))
+// {
+//     $sql="UPDATE registration SET `status` ='active' WHERE id = '$userId'";
+// 	$result = mysqli_query($conn,$sql);
+//     unset($_SESSION["id"]);
+//     header('location:user_verification.php');
+// }
+// else if(isset($_POST['reject']))
+// {
+//     $sql="DELETE from registration WHERE id = '$userId'";
+// 	$result = mysqli_query($conn,$sql);
+//     unset($_SESSION["id"]);
+//     header('location:user_verification.php');
+// }
+?>

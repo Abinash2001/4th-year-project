@@ -7,26 +7,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST['login']))
     $pass=$_POST["password"];
     $sql="Select * from `registration` where `id`='$userId' && `password`='$pass'";
     $result=mysqli_query($conn,$sql);
-    // $row=$result->fetch_assoc();
     $num=mysqli_num_rows($result);
     if($num==1)
     {  
         $_SESSION['userId']=$userId;
-        header("location:mail.php");
-        
-        // echo '<script>alert("Login Successful.")</script>';
-        // $_SESSION['userId']=$userId;
-        // if($row['type']=='admin')
-        // {
-        //     // sleep(5);
-        //     header("location:admindashboard.php");
-        //     // echo "window.location.href='..\admindashboard.php'";
-        // }
-        // else{
-        //     // sleep(5);
-        //     header("location:region.php");
-        //     // echo "location.href='..\region.php'";
-        // }
+        header("location:otp.php");
     }
     else{
         echo '<script>alert("Wrong user Id or Password ! Please check and try again.")</script>';
