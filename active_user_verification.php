@@ -35,18 +35,23 @@ $query=$conn->query($sql);
         </thead>
         <tbody>
             <?php
-        $eventIDArray=array();
+        $emptyArray=array();
         $i=0;
         while($row = $query->fetch_assoc()){
+            $sql1="select * from key where user_id={$row['id']}";
+            $query1=$conn->query($sql1);
+            $row1=$query1->fetch_assoc();
+            $private_key=$row1['private_key'];
+            openssl_private_decrypt($row['aadhar'], $aadhar, $private_key);
             $emptyArray[$i]=intval($row['id']);
     ?>
                 <tr>
                     <td class="table_data"><?php echo $row['first_name']." ".$row['middle_name']." ".$row['last_name'];?></td>
-                    <td class="table_data"><?php echo $row['aadhar']; ?></td>
+                    <td class="table_data"><?php echo $aadhar; ?></td>
                     <td class="table_data"><?php echo $row['phone']; ?></td>
-                    <td class="table_data2" type="Date"><?php echo $row['apply_date'];?></td>
+                    <td class="table_data" type="Date"><?php echo $row['apply_date'];?></td>
                     <!-- <td class="table_data1"><button class="approv"><?php echo $row['status'];?></button></td> -->
-                    <td class="table_data1"><a href="" onclick="index(<?php echo $i ?>)" class="approv"><?php echo $row['status'];?></a></td>
+                    <td class="table_data"><a href="" onclick="index(<?php echo $i ?>)" class="approv"><?php echo $row['status'];?></a></td>
                 </tr>
                 <?php
         $i++;
@@ -57,12 +62,16 @@ $query=$conn->query($sql);
         </tbody>
     </table>
     <div class="submit">
-        <button onclick="history.back()">Back</button>
+        <button onclick="back()">Back</button>
+        <!-- <a href="javascript: history.go(-1)">Go Back</a> -->
     </div> 
 </body>
 </html>
 
 <script type="text/javascript">
+    function back(){
+    window.location.assign("admindashboard.php");
+  }
     function index(value){
     console.log(value);
     // Make an AJAX request to the PHP script

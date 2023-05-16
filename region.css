@@ -8,7 +8,7 @@
   --heading:black;
   --bg:#EBFAFF;
   --bg_helper:#F6EDED;
-  --importance:red;
+  --importance:#d02525;
   --para_helper:blue;
   --btn:#1d8c4a;
   --btn_helper:#0ba235;
@@ -38,6 +38,7 @@ body {
     align-items: center;
     padding: 2.5rem;
     background-color:var(--bg_helper);
+    position: relative;
   }
   
   .logo_container {
@@ -79,6 +80,15 @@ body {
     font-size: 2rem;
     font-weight: bold;
 }
+.login_list li .icons{
+  width: 4rem;
+  height: 4rem;
+}
+.login_list li p{
+  width: 100%;
+  margin: 0 0 0 20px;
+  padding: 0;
+}
   .logout{
     padding: 0.8rem 2rem;
     background: var(--heading);
@@ -102,6 +112,7 @@ body {
   .profile_link{
     width: 5rem;
     height: 5rem;
+    font-size: 1.5rem;
     border-radius: 50%;
   }
   

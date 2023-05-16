@@ -69,8 +69,9 @@ a span{
   }
   
   .logo {
-    max-width: 100%;
-    height: auto;
+    height: 4rem;
+    width: 16rem;
+    border-radius: .5rem;
   }
   
   .nav_container {

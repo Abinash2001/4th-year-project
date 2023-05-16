@@ -68,12 +68,15 @@
     ?>
     <!-- <input type="hidden" id="index_value" name="index_value" value=""> -->
     <div class="submit">
-          <button onclick="history.back()">Back</button>
+      <button onclick="back()">Back</button>
       </div> 
   </div>
 </body>
 </html>
 <script type="text/javascript">
+  function back(){
+    window.location.assign("admindashboard.php");
+  }
     function index(value){
     console.log(value);
     // Make an AJAX request to the PHP script

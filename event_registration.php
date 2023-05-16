@@ -66,6 +66,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="event_registration.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
@@ -100,11 +101,11 @@
                         
                     </div>
                     <div class="addmoreicon">
-                        <div class="add_more" onclick="add(option_details)">
+                        <div class="add_more" id="add">
                             <div class="icon"><ion-icon name="add-circle-outline"></ion-icon></div>
                             Add more
                         </div>
-                        <div class="add_more" onclick="remove()">
+                        <div class="add_more" id="remove">
                             <div class="icon"><ion-icon name="remove-circle-outline"></ion-icon></div>
                             Remove
                         </div>
@@ -129,5 +130,26 @@
             </div>
         </form>
     </body>
-    <script src="event_registration.js"></script>
+    <!-- <script src="event_registration.js"></script> -->
+    <script>
+        $(document).ready(function(){
+        var j=2;
+        $('#add').click(function(){
+        $('#option_details').append('<div id="option'+(++j)+'"><div class="option"><h4>Option '+j+'</h4><input class="textbox" name="option_name[]" type="text"></div></div>');
+        });
+            
+        $('#remove').click(function(){
+            if(j==1){
+                alert("You have to add atleast 2 Option !!");
+            }
+            else{
+                var parent=document.getElementById("option_details");
+                var opt= 'option'+j;
+                j--;
+                var child=document.getElementById(opt);
+                parent.removeChild(child);
+            }
+        });
+        });
+    </script>
 </html>

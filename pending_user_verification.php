@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("dbconnection.php");
-$sql="select * from registration where type='user' and status='pending'";
+$sql="select * from user_details where type='user' and status='pending'";
 $query=$conn->query($sql);
 $count  = mysqli_num_rows($query);
 ?>
@@ -23,7 +23,7 @@ $count  = mysqli_num_rows($query);
         <span id="filter" class="details">Apply Filter</span>-->
         LIST OF REGISTERED USERS
     </h2>
-    <div id="t">
+    <!-- <div id="t"> -->
     <table >
         <thead >
             <tr>
@@ -45,14 +45,14 @@ $count  = mysqli_num_rows($query);
                     <td class="table_data"><?php echo $row['first_name']." ".$row['middle_name']." ".$row['last_name'];?></td>
                     <td class="table_data"><?php echo $row['aadhar']; ?></td>
                     <td class="table_data"><?php echo $row['phone']; ?></td>
-                    <td class="table_data2" type="Date"><?php echo $row['apply_date'];?></td>
+                    <td class="table_data" type="Date"><?php echo $row['apply_date'];?></td>
                     <!-- <td class="table_data1"><button class="approv"><?php echo $row['status'];?></button></td> -->
-                    <td class="table_data1"><a href="" onclick="index(<?php echo $i ?>)" class="approv"><?php echo $row['status'];?></a></td>
+                    <td class="table_data"><a href="" onclick="index(<?php echo $i ?>)" class="approv"><?php echo $row['status'];?></a></td>
                 </tr>
                 <?php
         $i++;
-        $_SESSION['emptyArray']=$emptyArray;
     }
+    $_SESSION['emptyArray']=$emptyArray;
     // $jsonArray = json_encode($eventIDArray);
     ?>
         </tbody>

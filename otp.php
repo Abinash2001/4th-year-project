@@ -26,9 +26,9 @@
         $mail->Port = 587; 
         $mail->IsHTML(true);
         $mail->CharSet = 'UTF-8';
-        $mail->Username = "d7482935@gmail.com";
-        $mail->Password = "kjtyevnhutpsfthw";
-        $mail->SetFrom("d7482935@gmail.com");
+        $mail->Username = "ksouvik615@gmail.com";
+        $mail->Password = "zhpjhbezlibvkhbi";
+        $mail->SetFrom("ksouvik615@gmail.com");
         $mail->isHTML(true);
         $mail->Subject = "OTP to Login";
         $mail->MsgHTML ($message_body);

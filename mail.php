@@ -34,6 +34,9 @@ if(!empty($_POST["submit_otp"])) {
 
 <html>
     <head>
+    <script>
+        window.history.forward();
+</script>
         <title>User Login</title>
         <style>
             *{

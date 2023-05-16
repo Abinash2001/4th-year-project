@@ -299,7 +299,34 @@ body {
 .format-table td {
   border: 1px solid #ccc;
 }
+.submit{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
 
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border:black;
+  outline:black;
+  font-weight: bold;
+  font-size: medium;
+  width: 150px;
+  background-color: #8CC8FF;
+  color: white;
+  border-radius: 15px;
+  margin: 1rem
+  
+}
+button:hover {
+  cursor: pointer;
+  background-color: rgb(147, 115, 242);
+  
+}
 
 
 

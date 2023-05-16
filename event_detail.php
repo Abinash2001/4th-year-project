@@ -279,11 +279,22 @@ var $a=<?php echo json_encode($arr);?>;
   
   
   
-</div>   
+</div> 
 </div>
+<div class="submit">
+          <button onclick="back()">Back</button>
+</div>   
 </body>
 </html>
 <script>
+
+  function back(){
+    <?php
+      unset($_SESSION["eventID"]);
+      // header('location:live_event.php');  
+    ?>
+    window.location.assign("live_event.php");
+  }
 let progressBar = document.querySelector(".circular-progress");
 let valueContainer = document.querySelector(".value-container");
 

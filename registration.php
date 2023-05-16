@@ -13,11 +13,28 @@
     // Get the public key
     $public_key = openssl_pkey_get_details($res);
     $public_key = $public_key["key"];
+    
+
+    // Encrypt image
+    $key = openssl_random_pseudo_bytes(16);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $iv_hex=bin2hex($iv);
+
+
+    function encryptFile($sourceFile, $destinationFile, $key, $iv) {
+        $cipher = "aes-256-cbc";
+        $options = OPENSSL_RAW_DATA;
+        $fileContent = file_get_contents($sourceFile);
+        $encryptedData = openssl_encrypt($fileContent, $cipher, $key, $options, $iv);
+        file_put_contents($destinationFile, $encryptedData);
+    }
+
 
     // var_dump($public_key);
     if($_SERVER["REQUEST_METHOD"]=="POST" and isset($_POST['submit']))
     {
         include('dbconnection.php');
+        mysqli_set_charset($conn, "utf8");
         $firstName=$_POST['first_name'];
         $middleName=$_POST['middle_name'];
         $lastName=$_POST['last_name'];
@@ -42,41 +59,73 @@
         $currCountry=$_POST['curr_country'];
         // $aadhar=$_POST['aadhar'];
         openssl_public_encrypt($_POST['aadhar'], $aadhar, $public_key);
+        $aadhar=bin2hex($aadhar);
         $phone=$_POST['phone'];
         $email=$_POST['email'];
         // $c_aadhar=$_POST['c_aadhar'];
-        openssl_public_encrypt($_POST['c_aadhar'], $c_aadhar, $public_key);
-        $Aphone=$_POST['a_phone'];
-        $Aemail=$_POST['a_email'];
-        // $pass=$_POST['password'];
+        // openssl_public_encrypt($_POST['c_aadhar'], $c_aadhar, $public_key);
+        // $c_aadhar=bin2hex($c_aadhar);
+        // $Aphone=$_POST['a_phone'];
+        // $Aemail=$_POST['a_email'];
+        $password=$_POST['password'];
         openssl_public_encrypt($_POST['password'],$pass, $public_key);
-        // $c_pass=$_POST['c_password'];
-        openssl_public_encrypt($_POST['c_password'], $c_pass, $public_key);
+        $pass=bin2hex($pass);
+        // // $c_pass=$_POST['c_password'];
+        // openssl_public_encrypt($_POST['c_password'], $c_pass, $public_key);
+        // $c_pass=bin2hex($c_pass);
+        
         $file_f_aadhar=$_FILES['f_aadhar_pic'];
         $file_f_aadhar_name=$file_f_aadhar['name'];
         $file_f_aadhar_path=$file_f_aadhar['tmp_name'];
         $destfile_f_aadhar="image/".$file_f_aadhar_name;
-        move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
+        // move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
+        // Encrypt the uploaded file
+        encryptFile($file_f_aadhar_path, $destfile_f_aadhar, $key, $iv);
         
         $file_b_aadhar=$_FILES['b_aadhar_pic'];
         $file_b_aadhar_name=$file_b_aadhar['name'];
         $file_b_aadhar_path=$file_b_aadhar['tmp_name'];
         $destfile_b_aadhar="image/".$file_b_aadhar_name;
-        move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
+        // move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
+        encryptFile($file_b_aadhar_path, $destfile_b_aadhar, $key, $iv);
         
         $file_userPic=$_FILES['user_pic'];
         $file_userPic_name=$file_userPic['name'];
         $file_userPic_path=$file_userPic['tmp_name'];
         $destfile_userPic="image/".$file_userPic_name;
-        move_uploaded_file($file_userPic_path,$destfile_userPic);
-    $sql="INSERT INTO `registration`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `c_password`, `aadhar`, `c_aadhar`, `phone`, `a_phone`, `email`, `a_email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$c_pass','$aadhar','$c_aadhar','$phone','$Aphone','$email','$Aemail','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
-    $result=mysqli_query($conn,$sql);
-        $query="select * from `registration` where id=(select max(id) from registration)";
+        // move_uploaded_file($file_userPic_path,$destfile_userPic);
+        encryptFile($file_userPic_path, $destfile_userPic, $key, $iv);
+
+        $sql="INSERT INTO `user_details`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `aadhar`, `phone`, `email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$aadhar','$phone','$email','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
+        $result=mysqli_query($conn,$sql);
+        $query="select * from `user_details` where id=(select max(id) from user_details)";
         $result=mysqli_query($conn,$query);
         $row = $result->fetch_assoc();
         $user_id=$row['id'];
-        $query="INSERT INTO `key`( `user_id`, `public_key`, `private_key`) VALUES ('$user_id','$public_key','$private_key')";
+        $query="INSERT INTO `key`( `user_id`, `public_key`, `private_key`,`iv`) VALUES ('$user_id','$public_key','$private_key','$iv_hex')";
         $result=mysqli_query($conn,$query);
+    
+    
+        // $to_email = "receipient@gmail.com";
+        $subject = "Important: Your Account Credentials";
+        $body = "We hope this email finds you well. We are writing to provide you with the account credentials as requested. Please keep this information confidential and ensure it is not shared with anyone.
+
+        Below are your login details:
+        
+        Email: {$row['id']}
+        Password: $password
+        
+        Thank you for choosing us. We value your trust and are committed to providing you with a secure and seamless experience. If you have any further questions or need assistance, please do not hesitate to reach out.
+        
+        Best regards,";
+        $headers = "From: d7482935@gmail.com";
+
+        if (mail($email, $subject, $body, $headers)) {
+            echo "<script> alert('Email successfully sent to $email...') </script>";
+        } else {
+            // echo "Email sending failed...";
+            echo "<script> alert('Email sending failed...') </script>";
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -168,11 +217,11 @@
                     <input type="tel"  maxlength="10" name="phone" placeholder="Phone No.*" required />
                     <input type="email" name="email" placeholder="Email*" required />
                 </div>
-                <div class="boxes_1">
+                <!-- <div class="boxes_1">
                     <input type="number" name="c_aadhar" placeholder="Confirm Aadhar No.*" required />
                     <input type="tel" maxlength="10" name="a_phone" placeholder="Alternate Phone No.*" required />
                     <input type="email" name="a_email" placeholder="Alternate email*" required />
-                </div>
+                </div> -->
             </div>
             </div>
             <h2>Create Password</h2>

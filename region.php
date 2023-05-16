@@ -1,11 +1,58 @@
 <?php
     include('dbconnection.php');
     session_start();
+
+    // $userID=123456789133;
     $userID=$_SESSION['userId'];
     if(!isset($userID))
     {
         header("location:login.php");
     }
+    if(isset($_POST['submit']))
+    {
+        $sql1="SELECT * FROM `key` WHERE id=1";
+        $query1=$conn->query($sql1);
+        $row1=$query1->fetch_assoc();
+        $public_key=$row1['public_key'];
+        $iv_hex=$row1['iv'];
+        $iv=hex2bin($iv_hex);
+        $key = openssl_random_pseudo_bytes(16);
+
+        function encryptFile($sourceFile, $destinationFile, $key, $iv) {
+            $cipher = "aes-256-cbc";
+            $options = OPENSSL_RAW_DATA;
+            $fileContent = file_get_contents($sourceFile);
+            $encryptedData = openssl_encrypt($fileContent, $cipher, $key, $options, $iv);
+            file_put_contents($destinationFile, $encryptedData);
+        }
+
+        // $msg=$_POST['message'];
+        if(isset($_POST['message']) && isset($_POST['file'])){
+            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+    
+            // $file=$_POST['file'];
+            $file_file=$_FILES['file'];
+            $file_file_name=$file_f_aadhar['name'];
+            $file_file_path=$file_f_aadhar['tmp_name'];
+            $destfile_file="image/".$file_f_aadhar_name;
+            encryptFile($file_file_path, $destfile_file, $key, $iv);
+    
+            $sql="INSERT INTO `secret_msg`(`msg`, `file`,) VALUES ('$msg','$destfile_file')";
+            mysqli_query($conn,$sql);
+        }
+        else if($_POST['message']){
+            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+        }
+        else if($_POST['file']){
+            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+            $file_file=$_FILES['file'];
+            $file_file_name=$file_f_aadhar['name'];
+            $file_file_path=$file_f_aadhar['tmp_name'];
+            $destfile_file="image/".$file_f_aadhar_name;
+            encryptFile($file_file_path, $destfile_file, $key, $iv);
+        }
+    }
+
     $sql1="SELECT * FROM `registration` WHERE id=$userID";
     $query1=$conn->query($sql1);
     $row1 = $query1->fetch_assoc();
@@ -21,26 +68,82 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="stylesheet" href="region.css">
+    <link rel="stylesheet" href="Profile.css">
+    <link rel="stylesheet" href="secret.css">
+    <!-- <script src="Profile.js"></script> -->
     <title>Region_page</title>
 </head>
 <body>
   <!-- Navbar part -->
-  <div class="navbar">
+<div class="navbar">
     <div class="logo_container">
       <img src="image/logo2.png" alt="LOGO" class="logo">
     </div>
     <div class="profile_container">
         <ul class="login_list">
             <li>
-                <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile Icon">
+                <button id="mbtn" >Contact Us</button>
             </li>
             <li>
+                <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile"  onclick="toggleMenu()">
+            </li>
+            <!-- <li>
               <a class="logout" href="logout.php">Log Out</a>
-          </li>
+          </li> -->
         </ul>
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+              <div class="user-info">
+                    <img src="<?php echo $row1['user_pic']?>">
+                    <h3><?php echo $row1['first_name']." ".$row1['middle_name']." ".$row1['last_name']?></h3>
+                </div>
+                <hr>
+                <a href="result_list.php" class="sub-menu-link">
+                    <!-- <img src="vote.png"> -->
+                    <ion-icon class="icons" name="podium-outline"></ion-icon>
+                    <p>Result</p>
+                    <span></span>
+                </a>
+                <a class="sub-menu-link" href="logout.php">
+                <!-- <a href="#" class="sub-menu-link"> -->
+                    <!-- <img src="vote.png"> -->
+                    <ion-icon class="icons" name="log-out-outline"></ion-icon>
+                    <p>Logout</p>
+                    <span></span>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
-   
+</div>
+<div id="modalDialog" class="modal">
+        <div class="modal-content animate-top">
+            <div class="modal-header">
+                <h5 class="modal-title">Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <form method="post" id="contactFrm">
+            <div class="modal-body">
+                <!-- Form submission status -->
+                <div class="response"></div>
+                
+                <div class="form-group">
+                    <label>Message:</label>
+                    <textarea name="message" id="message" class="form-control" placeholder="Your message here" rows="6"></textarea>
+                </div>
+                <div class="file">
+                    <label>File:</label>
+                    <input type="file" name="file" id="file" class="file" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Submit button -->
+                <button type="submit" name="submit" >Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
 
   <div class="region_container">
     <!-- Note Part -->
@@ -137,6 +240,41 @@
     </footer>
 </body>
 </html>
+<script>
+    // Get the modal
+var modal = $('#modalDialog');
+
+// Get the button that opens the modal
+var btn = $("#mbtn");
+
+// Get the  element that closes the modal
+var span = $(".close");
+
+$(document).ready(function(){
+    // When the user clicks the button, open the modal 
+    btn.on('click', function() {
+        modal.show();
+    });
+    
+    // When the user clicks on  (x), close the modal
+    span.on('click', function() {
+        modal.hide();
+    });
+});
+
+// When the user clicks anywhere outside of the modal, close it
+$('body').bind('click', function(e){
+    if($(e.target).hasClass("modal")){
+        modal.hide();
+    }
+});
+
+    let subMenu = document.getElementById("subMenu");
+    
+    function toggleMenu(){
+        subMenu.classList.toggle("open-menu");
+    }
+</script>
 <script type="text/javascript">
     function index(value){
     console.log(value);

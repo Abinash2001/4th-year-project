@@ -15,7 +15,9 @@
         Header Section
     ---------------------->
     <header class="header">
-        <div class="logo">ABINASH</div>
+        <div class="logo_container">
+          <img src="image/logo2.png" alt="LOGO" class="logo">
+        </div>
         <nav class="navbar">
             <div>
                 <ul class="navbar_list">

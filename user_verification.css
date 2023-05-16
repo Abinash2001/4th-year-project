@@ -1,8 +1,9 @@
 body{
     background-color: #D0F1F6;
 }
-#t{
-    overflow-x: auto;
+a{
+    text-decoration: none;
+    color: var(--heading);
 }
 table{
     margin:0;
@@ -32,7 +33,7 @@ text-align: center;
 margin-left: auto;
 margin-right: auto;
 }
-.table_data2{
+/* .table_data2{
     color: red;
     align-content: center center;
     padding:0;
@@ -43,7 +44,7 @@ margin-right: auto;
     border-radius: 10px;
     border: 0.1rem black solid;
     height: 2.2rem;
-}
+} */
 #filter
 {
     position:top center;
@@ -53,16 +54,16 @@ margin-right: auto;
 .table_data{
     align-content: center center;
     text-align: center;
-    padding:0;
+    padding:.5rem;
     margin:0;
     font-size: 30;
-    background-color: #D9D9D9;
+    /* background-color: #D9D9D9; */
     border-radius: 10px;
     border: 0.1rem black solid;
     height: 2.2rem;
     height: 3rem;
 }
-.table_data1{
+/* .table_data1{
     align-content: center center;
     text-align: center;
     padding: 0;
@@ -72,34 +73,34 @@ margin-right: auto;
     border-radius: 10px;
     height: 2.2rem;
     border: 0.1rem black solid;
-}
-.table_data1 :hover{
-color: rgb(100, 144, 159);
-background-color: rgba(68, 101, 38, 0);
-}
-.approv{
-    position:center center;
-    align-content: center center;
-    padding:0;
+} */
+.approv {
+    display: flex;
+    /* position: center center;
+    align-content: center center; */
+    padding: 0;
     font-size: 30;
+    align-items: center;
+    justify-content: center;
     background-color: #92E0EB;
     border-radius: 10px;
+    /* text-align: center; */
     border-color: whitesmoke;
     width: 10rem;
     height: 2rem;
 }
-.not-approv{
+/* .not-approv{
     position: center center;
     align-content: center center;
     padding:0;
     border-color: whitesmoke;
-   /* margin:1000px;*/
+   /* margin:1000px;*
     font-size: 30;
     background-color: #98A6F6;
     width: 10rem;
     height: 2rem;
     border-radius: 10px;
-}
+} */
 .page
 {
     align-content: center;

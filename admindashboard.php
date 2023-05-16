@@ -1,10 +1,11 @@
 <?php
     session_start();
-    $userID=$_SESSION['userId'];
-    if(!isset($userID))
-    {
-        header("location:login.php");
-    }
+    // $userID=$_SESSION['userId'];
+    // if(!isset($userID))
+    // {
+    //     header("location:login.php");
+    // }
+    // $userID=9876543210;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +19,7 @@
 <body>
     <div class="navbar">
         <div class="logo_container">
-          <img src="logo2.png" alt="LOGO" class="logo">
+          <img src="image/logo2.png" alt="LOGO" class="logo">
         </div>
         <div class="profile_container">
             <ul class="login_list">

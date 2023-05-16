@@ -5,22 +5,45 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST['login']))
     include('dbconnection.php');
     $userId=$_POST["user_id"];
     $pass=$_POST["password"];
-    $sql="Select * from `registration` where `id`='$userId' && `password`='$pass'";
+    $sql1="select * from `key` where user_id=$userId";
+    $query1=mysqli_query($conn,$sql1);
+    $row1=$query1->fetch_assoc();
+    $private_key=$row1['private_key'];
+    $sql="Select * from `user_details` where `id`='$userId' && `status`='active'";
     $result=mysqli_query($conn,$sql);
     $num=mysqli_num_rows($result);
     if($num==1)
-    {  
-        $_SESSION['userId']=$userId;
-        header("location:otp.php");
+    {
+        $row=$result->fetch_assoc();
+        $password=$row['password'];
+        $password=hex2bin($password);
+        openssl_private_decrypt($password, $password, $private_key);
+        if($password==$pass)
+        {
+            $sql="Select * from `user_details` where `id`='$userId' && `password`='$password'";
+            $result=mysqli_query($conn,$sql);
+            $num=mysqli_num_rows($result);
+            if($num==1)
+            {  
+                $_SESSION['userId']=$userId;
+                header("location:otp.php");
+            }
+        }
+        else{
+            echo '<script>alert("Wrong user Id or Password ! Please check and try again.")</script>';
+        }
     }
     else{
-        echo '<script>alert("Wrong user Id or Password ! Please check and try again.")</script>';
+        echo '<script>alert("Wait until your Profile is verified.")</script>';
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+        window.history.forward();
+</script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

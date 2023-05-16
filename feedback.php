@@ -5,6 +5,7 @@
     $eventId= $_SESSION['eventID'];
     if((!isset($userID) && !isset($eventId)) || isset($_POST["skip"]))
     {
+        unset($_SESSION["eventID"]);
         header('location:region.php');
     }
     if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST['submit'])){
