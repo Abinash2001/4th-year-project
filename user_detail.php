@@ -1,8 +1,56 @@
 <?php
+session_start();
 include("dbconnection.php");
-$sql="select * from registration where type='user' and status='pending'";
+$userId=$_SESSION['id'];
+
+$sql1="select * from `key` where user_id=$userId";
+$query1=$conn->query($sql1);
+$row1=$query1->fetch_assoc();
+$private_key=$row1['private_key'];
+$iv_hex=$row1['iv'];
+$iv=hex2bin($iv_hex);
+
+function decryptFile($sourceFile, $destinationFile, $key, $iv) {
+    $cipher = "aes-256-cbc";
+    $options = OPENSSL_RAW_DATA;
+    $fileContent = file_get_contents($sourceFile);
+    $decryptedData = openssl_decrypt($fileContent, $cipher, $key, $options, $iv);
+    file_put_contents($destinationFile, $decryptedData);
+}
+
+$sql="select * from registration where id=$userId";
 $query=$conn->query($sql);
-$row = $query->fetch_assoc();
+$row1 = $query->fetch_assoc();
+// if($row['status']=='active')
+// {
+
+// }
+// else{
+    if(isset($_POST['approve']) && $row1['status']!='active')
+    {
+        $sql="UPDATE registration SET `status` ='active' WHERE id = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        unset($_SESSION["id"]);
+        header('location:pending_user_verification.php');
+    }
+    else if(isset($_POST['reject']))
+    {
+        $sql="DELETE from `key` WHERE user_id  = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        $sql="DELETE from registration WHERE id = '$userId'";
+        $result = mysqli_query($conn,$sql);
+        unset($_SESSION["id"]);
+        header('location:pending_user_verification.php');
+    }
+    else if(isset($_POST['back']))
+    {
+        unset($_SESSION["id"]);
+        header('location:active_user_verification.php');
+    }
+    $sql="select * from registration where type='user'&& id='$userId'";
+    $query=$conn->query($sql);
+    $row = $query->fetch_assoc();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +68,7 @@ $row = $query->fetch_assoc();
 </head>
 
 <body>
-    <form action="registration.php" method='POST'>
+    <form action="" method='POST'>
         <div class="container">
             <h1 class="heading">E-Registration</h1>
             <h2>Aplicant's Details</h2>
@@ -65,8 +113,7 @@ $row = $query->fetch_assoc();
                     </div>
                 </div>
             </div>
-
-            <h2>Aplicant's Address</h2>
+            <h2>Applicant's Address</h2>
             <div class="box">
                 <h4>Permanent Address</h4>
                 <div class="perma_address boxes">
@@ -141,15 +188,18 @@ $row = $query->fetch_assoc();
                     </div>
                 </div>
             </div>
-
-
+            <?php
+                $aadh=hex2bin($row['aadhar']);
+                openssl_private_decrypt($aadh, $aadhar, $private_key);
+                // openssl_private_decrypt($row['c_aadhar'], $c_aadhar, $private_key);
+            ?>
             <h2>Details of voter’s photo identity card</h2>
             <div class="box">
             <div class="voter_details boxes">
                 <div class="boxes_1">
                     <div class="label">
                             <label for="">Aadhar</label>
-                            <input readonly type="text" name="aadhar" value="<?php echo $row['aadhar']?>"/>
+                            <input readonly type="text" name="aadhar" value="<?php echo $aadhar?>"/>
                     </div>
                     <div class="label">
                             <label for="">Phone</label>
@@ -160,53 +210,97 @@ $row = $query->fetch_assoc();
                             <input readonly type="email" name="email" value="<?php echo $row['email']?>"/>
                     </div>
                 </div>
-                <div class="boxes_1">
+                <!-- <div class="boxes_1">
                     <div class="label">
                             <label for="">Confirm Aadhar</label>
-                            <input readonly type="text" name="c_aadhar" value="<?php echo $row['c_aadhar']?>"/>
+                            <input readonly type="text" name="c_aadhar" value="<?php //echo $c_aadhar?>"/>
                     </div>
                     <div class="label">
                             <label for="">Alternate Phone</label>
-                            <input readonly type="text" name="a_phone" value="<?php echo $row['a_phone']?>"/>
+                            <input readonly type="text" name="a_phone" value="<?php //echo $row['a_phone']?>"/>
                     </div>
                     <div class="label">
                             <label for="">Alternate Email</label>
-                            <input readonly type="email" name="a_email" value="<?php echo $row['a_email']?>"/>
+                            <input readonly type="email" name="a_email" value="<?php //echo $row['a_email']?>"/>
                     </div>
-                </div>
+                </div> -->
             </div>
             </div>
             <h2>Upload Documents</h2>
             <div class="upload">
                 <div class="upload_area upload_area_1">
+                    <?php
+                    $encryptedFilePath = $row['f_aadhar_p'];
+                    $f_aadhar_p = "image/f_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
+                    decryptFile($encryptedFilePath, $f_aadhar_p, $private_key, $iv);
+                    ?>
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $row['f_aadhar_p'];?>" alt="" class="file_preview a_f_img">
+                        <img src="<?php echo $f_aadhar_p;?>" alt="" class="file_preview a_f_img">
                     </div>
                     <label for="a_f_img">Aadhar Front Image</label>
                 </div>
+                <?php
+                    $encryptedFilePath = $row['b_aadhar_p'];
+                    $b_aadhar_p = "image/b_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
+                    decryptFile($encryptedFilePath, $b_aadhar_p, $private_key, $iv);
+                ?>
                 <div class="upload_area upload_area_2">
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $row['b_aadhar_p'];?>" alt="" class="file_preview a_b_img">
+                        <img src="<?php echo $b_aadhar_p;?>" alt="" class="file_preview a_b_img">
                     </div>
                     <label for="a_b_img">Aadhar Back Image</label>
                 </div>
+                <?php
+                    $encryptedFilePath = $row['user_pic'];
+                    $user_pic = "image/user_pic.jpg"; // Specify the destination file path for the decrypted file
+                    decryptFile($encryptedFilePath, $user_pic, $private_key, $iv);
+                ?>
                 <div class="upload_area upload_area_3">
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $row['user_pic'];?>" alt="" class="file_preview voter_img">
+                        <img src="<?php echo $user_pic;?>" alt="" class="file_preview voter_img">
                     </div>
                     <label for="voter_img">Voter’s Photo</label>
                 </div>
             </div>
-            
             <div class="submit">
-            <button type="submit">Submit</button>
-            </div>
+            <?php
+            if($row1['status']=='active')
+            {
+            ?> 
+                <button type="submit" name="back">Back</button>
+            <?php
+            }
+            else{
+            ?>
+            <button type="submit" name="approve">Approve</button>
+            <button type="submit" name="reject">Reject</button>
+            <?php
+            }
+            ?>
+            </div> 
         </div>
         
     </form>
 </body>
 <script src="registration.js"></script>
 </html>
+
+<?php
+// if(isset($_POST['approve']))
+// {
+//     $sql="UPDATE registration SET `status` ='active' WHERE id = '$userId'";
+// 	$result = mysqli_query($conn,$sql);
+//     unset($_SESSION["id"]);
+//     header('location:user_verification.php');
+// }
+// else if(isset($_POST['reject']))
+// {
+//     $sql="DELETE from registration WHERE id = '$userId'";
+// 	$result = mysqli_query($conn,$sql);
+//     unset($_SESSION["id"]);
+//     header('location:user_verification.php');
+// }
+?>

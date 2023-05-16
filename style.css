@@ -10,7 +10,10 @@ font-family: 'Roboto', sans-serif; */
     --heading:black;
     --para:#676767;
     --btn:#92E0EB;
+    --btn_helper:#1fdad2;
     --bg:#EBFAFF;
+    --footer:#b4ecff;
+    --white:white;
 }
 body{
     overflow-x: hidden;
@@ -23,7 +26,7 @@ html{
 }
 a{
     text-decoration: none;
-    color: black;
+    color: var(--heading);
 }
 li{
     list-style: none;
@@ -61,9 +64,16 @@ p{
     justify-content: space-between;
     margin: 2rem 5rem;
 }
-.logo{
-    font-size: 2rem;
-}
+.logo_container {
+    width: 20%;
+  }
+  
+  .logo {
+    height: 4rem;
+    width: 16rem;
+    border-radius: .5rem;
+  }
+  
 .navbar_list,.login_list{
     display: flex;
     gap: 2rem;
@@ -72,8 +82,8 @@ p{
 }
 .signup{
     padding: 0.8rem 2rem;
-    background: black;
-    color: white;
+    background: var(--heading);
+    color: var(--white);
     border-radius: 1rem;
     font-size: 1.8rem;
 }
@@ -82,12 +92,12 @@ p{
 }
 .navbar_link:active,
 .navbar_link:hover{
-    color:#1fdad2
+    color:var(--btn_helper);
 }
 .signup:active,
 .signup:hover{
-    color:black;
-    background-color: #1fdad2;
+    color:var(--heading);
+    background-color: var(--btn_helper);
 }
 .mobile_navbar_btn{
     display: none;
@@ -119,7 +129,7 @@ p{
     background: var(--btn);
 }
 .btn:hover{
-    background-color: #1fdad2;
+    background-color: var(--btn_helper);
 }
 .btn_section{
     display: flex;
@@ -146,12 +156,12 @@ p{
 /*-----------------------------
         Main Section Code
     --------------------------*/
-.section_main{
-    /* background-color: blue; */
+/* .section_main{
+    /* background-color: blue; 
 }
 .btn_section span{
-    
-}
+     
+}*/
 .main_img{
     max-width: 70%;
     border-radius: 10%;
@@ -177,8 +187,13 @@ p{
         Footrt Section Code
     --------------------------*/
 .footer{
-    background-color: #b4ecff;
+    background-color: var(--footer);
 }
+.section_footer_service{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 .section_footer_about p,.section_footer_help p{
     font-size: 1.7rem;
     margin: 0;
@@ -234,7 +249,6 @@ p{
             display: flex;
             top: 0;
             left: 0;
-            background: rgb(255, 0, 0);
             justify-content: center;
             align-items: center;
             transform: translateX(100%);
@@ -311,14 +325,4 @@ p{
             grid-column: 1/-1;
         }
 
-    }
-    @media(max-width:500px){
-        html{
-            font-size: 50%;
-        }
-    }
-    @media(max-width:400px){
-        html{
-            font-size: 48%;
-        }
     }

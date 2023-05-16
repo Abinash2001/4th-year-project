@@ -50,26 +50,3 @@ stars[4].onclick = function(){
 
   emoji.style.transform = "translateX(-400px)";
 }
-
-
-
-
-
-
-
-const btn = document.querySelector("#btn");
-const btnText = document.querySelector("#btnText");
-const skipBtn = document.querySelector("#skipBtn");
-
-btn.onclick = () => {
-  btnText.innerHTML = "Thanks";
-  btn.classList.add("active");
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 2000);
-};
-
-skipBtn.onclick = () => {
-  window.location.href = "login.html";
-};
-

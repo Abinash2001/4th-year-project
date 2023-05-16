@@ -1,0 +1,155 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background: #EBFAFF;;
+}
+
+:root{
+    --white:white;
+    --heading:black;
+    --bg:#EBFAFF;
+    --bg_helper:#F6EDED;
+    --importance:red;
+    --para_helper:blue;
+    --btn:#1d8c4a;
+    --btn_helper:#0ba235;
+    --footer:#b4ecff;
+  }
+html{
+    font-size: 62.5%;
+    /* 1rem=10px */
+    overflow-x: hidden;
+  }
+.admin_container{
+    margin: 5rem;
+}
+.admin_box{
+    display: flex;
+    margin: 0 0 1rem 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+a{
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+}
+a span{
+    display: flex;
+    justify-content: center;
+}
+.admin_boxs{
+    /* width: 20rem; */
+    height: 10rem;
+    border-radius: 1rem;
+    border: black 0.01rem solid;
+    background-color: #c5f0ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    flex: 1 1 20rem;
+    margin: 2rem;
+}
+
+  /* Navbar Section */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem;
+    background-color:var(--bg_helper);
+  }
+  
+  .logo_container {
+    width: 20%;
+  }
+  
+  .logo {
+    height: 4rem;
+    width: 16rem;
+    border-radius: .5rem;
+  }
+  
+  .nav_container {
+    width: 60%;
+  }
+  
+  .nav_items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .nav_items li {
+    margin: 0 1rem;
+  }
+  
+  .profile_container {
+    width: 20%;
+    /* display: flex;
+    justify-content: flex-end; */
+  }
+  .login_list{
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+  .logout{
+    padding: 0.8rem 2rem;
+    background: var(--heading);
+    color: var(--white);
+    border-radius: 1rem;
+    font-size: 1.8rem;
+}
+.logout:active,
+.logout:hover{
+    color:var(--heading);
+    background-color: var(--btn_helper);
+}
+  /* .profile_link {
+    display: block;
+    height: 100%;
+  } */
+  .login_list li{
+    display: flex;
+    align-items: center;
+  }
+  .profile_link{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+  }
+  
+      
+  @media(max-width:428px){
+      .admin_boxs{
+          margin: 1rem 2rem;
+        }
+        .admin_container {
+            margin: 2rem;
+        }
+        .navbar {
+        padding: 1.5rem;
+        }
+        .logo-container {
+        width: 20%;
+        }
+        .nav-container {
+        width: 40%;
+        }
+        .nav-items li {
+        margin: 0 0.5rem;
+        }
+        .profile-container {
+        width: 20%;
+        }
+}
