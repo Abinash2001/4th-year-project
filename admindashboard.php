@@ -1,11 +1,15 @@
 <?php
     session_start();
-    // $userID=$_SESSION['userId'];
-    // if(!isset($userID))
-    // {
-    //     header("location:login.php");
-    // }
+    include('dbconnection.php');
+    $userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
     // $userID=9876543210;
+    $sql1="SELECT * FROM `registration` WHERE id=$userID";
+    $query1=$conn->query($sql1);
+    $row1  = $query1->fetch_assoc();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +28,7 @@
         <div class="profile_container">
             <ul class="login_list">
                 <li>
+                    <!-- <img class="profile_link" src="image/new_pic1.jpg" alt="Profile Icon"> -->
                     <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile Icon">
                 </li>
                 <li>
@@ -86,6 +91,15 @@
                 </div>
                 <div class="admin_boxs">
                     <a href="user_feedback.php">User's Feedback</a>
+                </div>
+                
+            </div>
+        </div>
+        <div class="box">
+            <h2>Issue Report Details</h2>
+            <div class="admin_box"> 
+                <div class="admin_boxs">
+                    <a href="report_issue.php">Report</a>
                 </div>
                 
             </div>

@@ -1,11 +1,21 @@
 <?php
   include('dbconnection.php');
   session_start();
-  $eventId=$_SESSION['eventID'];
+  $userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
+    $eventId=$_SESSION['eventID'];
+    if(!isset($eventId))
+    {
+        header("location:admindashboard.php");
+    }
+
   $sql1="SELECT count(*) FROM `vote` where `event_id`=$eventId";
   $result1 = mysqli_query($conn,$sql1);
   $row1=mysqli_fetch_assoc($result1);
-  $sql2="SELECT count(*) FROM `registration`";
+  $sql2="SELECT count(*) FROM `registration` where `type`='user'";
   $result2 = mysqli_query($conn,$sql2);
   $row2=mysqli_fetch_assoc($result2);
   $div=array(17,25,35,45,55,65);
@@ -25,8 +35,8 @@
   $sql4="SELECT * FROM `event_registration` where id=$eventId ";
   $result4 = mysqli_query($conn,$sql4);
   $row4=mysqli_fetch_assoc($result4);
-  $startTime=$row4['start_time'];
-  $stop=$row4['end_time'];
+  $startTime = ($row4['start_date'] . ' ' . $row4['start_time']);
+  $stop = ($row4['end_date'] . ' ' . $row4['end_time']);
   /*$time = $startTime;
   while($time < $stop)
 // {
@@ -55,7 +65,7 @@ $time = new DateTime($startTime);
 $x=100;
 for($i=1;$i<=6;$i++)
 {
-  $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+  $time->add(new DateInterval('PT' . $minutes_to_add*60 . 'S'));
   $stamp = $time->format('Y-m-d H:i:s');
   array_push($arr,array($stamp,$x,120-$x));
   $x=$x-10;
@@ -87,7 +97,7 @@ $f="male";
 $result5 = mysqli_query($conn,$sql5);
 $row5=mysqli_fetch_assoc($result5);
 $arr[5][1]=intval($row5['count(vote.user_id)']);
-$sql5="SELECT * FROM vote,candidate_details where vote.candi_id=candidate_details.id and vote.event_id= $eventId ";
+$sql5="SELECT * FROM candidate_details where event_id= $eventId ";
 $result5 = mysqli_query($conn,$sql5);
 //$row5=mysqli_fetch_assoc($result5);
 $num = mysqli_num_rows($result5);
@@ -217,7 +227,7 @@ var $a=<?php echo json_encode($arr);?>;
   <div id="bar_chart_div"></div>
   <div id="line_chart_div"></div>
   <div class="Recent_Activity">
-    <h2 class="section_heading">Candidate Details</h2>
+    <h2 class="section_heading">Option Details</h2>
       <div class="underline underline_1"></div>
   </div>
   
@@ -225,9 +235,9 @@ var $a=<?php echo json_encode($arr);?>;
     <table class="format-table">
       <thead>
         <tr>
-          <th>Candiate_ID</th>
-          <th>Canditate_Name</th>
-          <th>Candidate_Details</th>
+          <th>Option ID</th>
+          <th>Option Name</th>
+          <!-- <th>Candidate_Details</th> -->
         </tr>
       </thead>
       <tbody>
@@ -241,15 +251,15 @@ var $a=<?php echo json_encode($arr);?>;
           <td>
             <?php 
             echo $row5['candi_name'] ?></td>
-          <td>
+          <!-- <td>
             <?php 
-              $s=$row5['id'];
-              $sql6="SELECT * FROM vote,candidate_details where vote.candi_id=$s and vote.event_id= $eventId ";
-              $result6 = mysqli_query($conn,$sql6);
-              $row6=mysqli_fetch_assoc($result6);
-              echo $row6['candi_detail'];
+              // $s=$row5['id'];
+              // $sql6="SELECT * FROM vote,candidate_details where vote.candi_id=$s and vote.event_id= $eventId ";
+              // $result6 = mysqli_query($conn,$sql6);
+              // $row6=mysqli_fetch_assoc($result6);
+              // echo $row6['candi_detail'];
             ?>
-          </td>
+          </td> -->
 
         </tr>
         <?php $i++;}?>
@@ -293,7 +303,7 @@ var $a=<?php echo json_encode($arr);?>;
       unset($_SESSION["eventID"]);
       // header('location:live_event.php');  
     ?>
-    window.location.assign("live_event.php");
+    window.location.assign("previous_event.php");
   }
 let progressBar = document.querySelector(".circular-progress");
 let valueContainer = document.querySelector(".value-container");

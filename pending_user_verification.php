@@ -1,7 +1,12 @@
 <?php
 session_start();
 include("dbconnection.php");
-$sql="select * from user_details where type='user' and status='pending'";
+$userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
+$sql="select * from registration where type='user' and status='pending'";
 $query=$conn->query($sql);
 $count  = mysqli_num_rows($query);
 ?>
@@ -13,7 +18,7 @@ $count  = mysqli_num_rows($query);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <title>User Approval</title>
+    <title>Pending User</title>
     <!--<link rel="stylesheet" media="screen and (min-width : 1200px)" href="user-short.css">-->
     <link rel="stylesheet" href="user_verification.css">
 </head>
@@ -40,10 +45,16 @@ $count  = mysqli_num_rows($query);
         $i=0;
         while($row = $query->fetch_assoc()){
             $emptyArray[$i]=intval($row['id']);
+             $sql1="select * from `key` where user_id={$row['id']}";
+            $query1=$conn->query($sql1);
+            $row1=$query1->fetch_assoc();
+            $private_key=$row1['private_key'];
+            $aadharBin=hex2bin($row['aadhar']);
+            openssl_private_decrypt($aadharBin, $aadhar, $private_key);
     ?>
                 <tr>
                     <td class="table_data"><?php echo $row['first_name']." ".$row['middle_name']." ".$row['last_name'];?></td>
-                    <td class="table_data"><?php echo $row['aadhar']; ?></td>
+                    <td class="table_data"><?php echo $aadhar; ?></td>
                     <td class="table_data"><?php echo $row['phone']; ?></td>
                     <td class="table_data" type="Date"><?php echo $row['apply_date'];?></td>
                     <!-- <td class="table_data1"><button class="approv"><?php echo $row['status'];?></button></td> -->
@@ -51,19 +62,23 @@ $count  = mysqli_num_rows($query);
                 </tr>
                 <?php
         $i++;
+        $_SESSION['emptyArray']=$emptyArray;
     }
-    $_SESSION['emptyArray']=$emptyArray;
     // $jsonArray = json_encode($eventIDArray);
     ?>
         </tbody>
     </table>
     <div class="submit">
-        <button onclick="history.back()">Back</button>
+    <button onclick="back()">Back</button>
     </div> 
 </body>
 </html>
 
 <script type="text/javascript">
+    function back(){
+    window.location.assign("admindashboard.php");
+  }
+
     function index(value){
     console.log(value);
     // Make an AJAX request to the PHP script

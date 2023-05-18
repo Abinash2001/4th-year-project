@@ -75,7 +75,7 @@ margin-right: auto;
     border: 0.1rem black solid;
 } */
 .approv {
-    display: flex;
+    display: inline-flex;
     /* position: center center;
     align-content: center center; */
     padding: 0;

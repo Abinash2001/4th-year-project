@@ -1,17 +1,19 @@
 <?php
     include('dbconnection.php');
     session_start();
-    // $userID=$_SESSION['userId'];
-    // if(!isset($userID))
-    // {
-    //     header("location:login.php");
-    // }
+    $userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
     // $sql1="SELECT * FROM `registration` WHERE id=$userID";
     // $query1=$conn->query($sql1);
     // $row1 = $query1->fetch_assoc();
-    $sql="select * from event_registration where status=0";
+    // $sql="select * from event_registration where status=0";
+    $currentDateTime = time();
+    $sql="select * from `event_registration` where $currentDateTime < UNIX_TIMESTAMP(CONCAT(end_date, ' ', end_time))";
     $query=$conn->query($sql);
-?>
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +23,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="stylesheet" href="region.css">
-    <title>Region_page</title>
+    <title>Live Event</title>
 </head>
 <body>
   <!-- Navbar part -->
@@ -51,8 +53,14 @@
     <?php
         $eventIDArray=array();
         $i=0;
-        while($row = $query->fetch_assoc()){
-            $eventIDArray[$i]=intval($row['id']);
+        // while($row = $query->fetch_assoc()){
+        //     $eventIDArray[$i]=intval($row['id']);
+        while ($row = $query->fetch_assoc()) {
+          $startDateTime = strtotime($row['start_date'] . ' ' . $row['start_time']);
+          $endDateTime = strtotime($row['end_date'] . ' ' . $row['end_time']);
+      
+          $currentDateTime = time();
+          if($endDateTime > $currentDateTime){
     ?>
     <div class="region_box">
       <div class ="region_box_content"><h2><?php echo $row['event_name']?></h2>
@@ -63,6 +71,7 @@
     <?php
         $i++;
         $_SESSION['eventIDArray']=$eventIDArray;
+        }
     }
     // $jsonArray = json_encode($eventIDArray);
     ?>

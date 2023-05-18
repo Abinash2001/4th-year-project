@@ -2,7 +2,6 @@
 session_start();
 include("dbconnection.php");
 $userId=$_SESSION['id'];
-
 $sql1="select * from `key` where user_id=$userId";
 $query1=$conn->query($sql1);
 $row1=$query1->fetch_assoc();
@@ -18,7 +17,33 @@ function decryptFile($sourceFile, $destinationFile, $key, $iv) {
     file_put_contents($destinationFile, $decryptedData);
 }
 
-$sql="select * from user_details where id=$userId";
+// $sql1="select * from `key` where user_id=$userId";
+// $query1=$conn->query($sql1);
+// $row1=$query1->fetch_assoc();
+// $private_key=$row1['private_key'];
+// $iv_hex=$row1['iv'];
+// $iv=hex2bin($iv_hex);
+
+
+// function decryptFile($sourceFile, $destinationFile, $key, $iv) {
+//     $cipher = "aes-256-cbc";
+//     $options = OPENSSL_RAW_DATA;
+//     $fileContent = file_get_contents($sourceFile);
+//     // if ($fileContent === false) {
+//     //     throw new Exception("Failed to read source file: $sourceFile");
+//     // }
+//     $decryptedData = openssl_decrypt($fileContent, $cipher, $key, $options, $iv);
+//     // if ($decryptedData === false) {
+//     //     throw new Exception("Decryption failed. Check key and IV.");
+//     // }
+//     // if (file_put_contents($destinationFile, $decryptedData) === false) {
+//     //     throw new Exception("Failed to write decrypted data to destination file: $destinationFile");
+//     // }
+//     // $decryptedData = openssl_decrypt($fileContent, $cipher, $key, $options, $iv);
+//     // file_put_contents($destinationFile, $decryptedData);
+// }
+
+$sql="select * from registration where id=$userId";
 $query=$conn->query($sql);
 $row1 = $query->fetch_assoc();
 // if($row['status']=='active')
@@ -28,7 +53,7 @@ $row1 = $query->fetch_assoc();
 // else{
     if(isset($_POST['approve']) && $row1['status']!='active')
     {
-        $sql="UPDATE user_details SET `status` ='active' WHERE id = '$userId'";
+        $sql="UPDATE registration SET `status` ='active' WHERE id = '$userId'";
         $result = mysqli_query($conn,$sql);
         unset($_SESSION["id"]);
         header('location:pending_user_verification.php');
@@ -37,7 +62,7 @@ $row1 = $query->fetch_assoc();
     {
         $sql="DELETE from `key` WHERE user_id  = '$userId'";
         $result = mysqli_query($conn,$sql);
-        $sql="DELETE from user_details WHERE id = '$userId'";
+        $sql="DELETE from registration WHERE id = '$userId'";
         $result = mysqli_query($conn,$sql);
         unset($_SESSION["id"]);
         header('location:pending_user_verification.php');
@@ -47,7 +72,7 @@ $row1 = $query->fetch_assoc();
         unset($_SESSION["id"]);
         header('location:active_user_verification.php');
     }
-    $sql="select * from user_details where type='user' and status='active' and id='$userId'";
+    $sql="select * from registration where type='user'&& id='$userId'";
     $query=$conn->query($sql);
     $row = $query->fetch_assoc();
 // }
@@ -189,7 +214,8 @@ $row1 = $query->fetch_assoc();
                 </div>
             </div>
             <?php
-                openssl_private_decrypt($row['aadhar'], $aadhar, $private_key);
+                $aadh=hex2bin($row['aadhar']);
+                openssl_private_decrypt($aadh, $aadhar, $private_key);
                 // openssl_private_decrypt($row['c_aadhar'], $c_aadhar, $private_key);
             ?>
             <h2>Details of voter’s photo identity card</h2>
@@ -212,15 +238,15 @@ $row1 = $query->fetch_assoc();
                 <!-- <div class="boxes_1">
                     <div class="label">
                             <label for="">Confirm Aadhar</label>
-                            <input readonly type="text" name="c_aadhar" value="<?php echo $c_aadhar?>"/>
+                            <input readonly type="text" name="c_aadhar" value="<?php //echo $c_aadhar?>"/>
                     </div>
                     <div class="label">
                             <label for="">Alternate Phone</label>
-                            <input readonly type="text" name="a_phone" value="<?php echo $row['a_phone']?>"/>
+                            <input readonly type="text" name="a_phone" value="<?php //echo $row['a_phone']?>"/>
                     </div>
                     <div class="label">
                             <label for="">Alternate Email</label>
-                            <input readonly type="email" name="a_email" value="<?php echo $row['a_email']?>"/>
+                            <input readonly type="email" name="a_email" value="<?php //echo $row['a_email']?>"/>
                     </div>
                 </div> -->
             </div>
@@ -230,36 +256,39 @@ $row1 = $query->fetch_assoc();
                 <div class="upload_area upload_area_1">
                     <?php
                     $encryptedFilePath = $row['f_aadhar_p'];
-                    $f_aadhar_p = "decrypted_image/f_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
+                    $f_aadhar_p = "image/f_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
                     decryptFile($encryptedFilePath, $f_aadhar_p, $private_key, $iv);
                     ?>
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $f_aadhar_p;?>" alt="" class="file_preview a_f_img">
+                        <!-- <img src="<?php // echo $f_aadhar_p;?>" alt="" class="file_preview a_f_img"> -->
+                        <img src="<?php echo $row['f_aadhar_p']?>" alt="" class="file_preview a_f_img">
                     </div>
                     <label for="a_f_img">Aadhar Front Image</label>
                 </div>
                 <?php
                     $encryptedFilePath = $row['b_aadhar_p'];
-                    $b_aadhar_p = "decrypted_image/b_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
+                    $b_aadhar_p = "image/b_aadhar_p.jpg"; // Specify the destination file path for the decrypted file
                     decryptFile($encryptedFilePath, $b_aadhar_p, $private_key, $iv);
                 ?>
                 <div class="upload_area upload_area_2">
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $b_aadhar_p;?>" alt="" class="file_preview a_b_img">
+                        <!-- <img src="<?php //echo $b_aadhar_p;?>" alt="" class="file_preview a_b_img"> -->
+                        <img src="<?php echo $row['b_aadhar_p'] ?>" alt="" class="file_preview a_b_img">
                     </div>
                     <label for="a_b_img">Aadhar Back Image</label>
                 </div>
                 <?php
                     $encryptedFilePath = $row['user_pic'];
-                    $user_pic = "decrypted_image/user_pic.jpg"; // Specify the destination file path for the decrypted file
+                    $user_pic = "image/user_pic.jpg"; // Specify the destination file path for the decrypted file
                     decryptFile($encryptedFilePath, $user_pic, $private_key, $iv);
                 ?>
                 <div class="upload_area upload_area_3">
                     <!-- preview box -->
                     <div class="preview">
-                        <img src="<?php echo $user_pic;?>" alt="" class="file_preview voter_img">
+                        <!-- <img src="<?php echo $user_pic;?>" alt="" class="file_preview voter_img"> -->
+                        <img src="<?php echo $row['user_pic'] ?>" alt="" class="file_preview voter_img">
                     </div>
                     <label for="voter_img">Voter’s Photo</label>
                 </div>

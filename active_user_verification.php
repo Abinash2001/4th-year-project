@@ -1,6 +1,11 @@
 <?php
 session_start();
 include("dbconnection.php");
+$userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
 $sql="select * from registration where type='user' and status='active'";
 $query=$conn->query($sql);
 ?>
@@ -12,7 +17,7 @@ $query=$conn->query($sql);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <title>User Approval</title>
+    <title>Active User</title>
     <!--<link rel="stylesheet" media="screen and (min-width : 1200px)" href="user-short.css">-->
     <link rel="stylesheet" href="user_verification.css">
 </head>
@@ -38,11 +43,13 @@ $query=$conn->query($sql);
         $emptyArray=array();
         $i=0;
         while($row = $query->fetch_assoc()){
-            $sql1="select * from key where user_id={$row['id']}";
+            $sql1="select * from `key` where user_id={$row['id']}";
             $query1=$conn->query($sql1);
             $row1=$query1->fetch_assoc();
             $private_key=$row1['private_key'];
-            openssl_private_decrypt($row['aadhar'], $aadhar, $private_key);
+            $aadharBin=hex2bin($row['aadhar']);
+            openssl_private_decrypt($aadharBin, $aadhar, $private_key);
+
             $emptyArray[$i]=intval($row['id']);
     ?>
                 <tr>

@@ -9,7 +9,9 @@
     $sql1="SELECT * FROM `registration` WHERE id=$userID";
     $query1=$conn->query($sql1);
     $row1 = $query1->fetch_assoc();
-    $sql="select * from event_registration where status=1";
+    // $sql="select * from event_registration where status=1";
+    $currentDateTime = time();
+    $sql="select * from `event_registration` where $currentDateTime > UNIX_TIMESTAMP(CONCAT(end_date, ' ', end_time))";
     $query=$conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -21,7 +23,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="stylesheet" href="region.css">
-    <title>Region_page</title>
+    <title>Previous Event</title>
 </head>
 <body>
     <!-- Navbar part -->
@@ -66,16 +68,23 @@
     }
     // $jsonArray = json_encode($eventIDArray);
     ?>
-    <input type="hidden" id="index_value" name="index_value" value="">
+    <!-- <input type="hidden" id="index_value" name="index_value" value=""> -->
+  </div>
+  <div class="submit">
+      <button onclick="back()">Back</button>
+      </div> 
   </div>
 </body>
 </html>
 <script type="text/javascript">
+    function back(){
+    window.location.assign("admindashboard.php");
+  }
     function index(value){
     console.log(value);
     // Make an AJAX request to the PHP script
     $.ajax({
-        url: 'previous_eventJs.php',
+        url: 'live_eventJs.php',
         type: 'POST',
         data:{
             data:value,
@@ -88,7 +97,7 @@ if(isset($_SESSION['eventID']))
 {
 ?>
 <script>
-    window.location.assign("voting.php");
+    window.location.assign("event_detail.php");
 </script>
 // <?php
 }

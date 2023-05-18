@@ -78,27 +78,30 @@
         $file_f_aadhar_name=$file_f_aadhar['name'];
         $file_f_aadhar_path=$file_f_aadhar['tmp_name'];
         $destfile_f_aadhar="image/".$file_f_aadhar_name;
-        // move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
+        $destfile_f_aadhar_en="image/upload/".$file_f_aadhar_name;
+        move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
         // Encrypt the uploaded file
-        encryptFile($file_f_aadhar_path, $destfile_f_aadhar, $key, $iv);
+        encryptFile($file_f_aadhar_path, $destfile_f_aadhar_en, $key, $iv);
         
         $file_b_aadhar=$_FILES['b_aadhar_pic'];
         $file_b_aadhar_name=$file_b_aadhar['name'];
         $file_b_aadhar_path=$file_b_aadhar['tmp_name'];
         $destfile_b_aadhar="image/".$file_b_aadhar_name;
-        // move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
-        encryptFile($file_b_aadhar_path, $destfile_b_aadhar, $key, $iv);
+        $destfile_b_aadhar_en="image/upload/".$file_b_aadhar_name;
+        move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
+        encryptFile($file_b_aadhar_path, $destfile_b_aadhar_en, $key, $iv);
         
         $file_userPic=$_FILES['user_pic'];
         $file_userPic_name=$file_userPic['name'];
         $file_userPic_path=$file_userPic['tmp_name'];
         $destfile_userPic="image/".$file_userPic_name;
-        // move_uploaded_file($file_userPic_path,$destfile_userPic);
-        encryptFile($file_userPic_path, $destfile_userPic, $key, $iv);
+        $destfile_userPic_en="image/upload/".$file_userPic_name;
+        move_uploaded_file($file_userPic_path,$destfile_userPic);
+        encryptFile($file_userPic_path, $destfile_userPic_en, $key, $iv);
 
-        $sql="INSERT INTO `user_details`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `aadhar`, `phone`, `email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$aadhar','$phone','$email','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
+        $sql="INSERT INTO `registration`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `aadhar`, `phone`, `email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$aadhar','$phone','$email','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
         $result=mysqli_query($conn,$sql);
-        $query="select * from `user_details` where id=(select max(id) from user_details)";
+        $query="select * from `registration` where id=(select max(id) from registration)";
         $result=mysqli_query($conn,$query);
         $row = $result->fetch_assoc();
         $user_id=$row['id'];
@@ -112,7 +115,7 @@
 
         Below are your login details:
         
-        Email: {$row['id']}
+        UserID: {$row['id']}
         Password: $password
         
         Thank you for choosing us. We value your trust and are committed to providing you with a secure and seamless experience. If you have any further questions or need assistance, please do not hesitate to reach out.

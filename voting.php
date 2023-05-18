@@ -52,7 +52,7 @@ $row1=$query1->fetch_assoc()
                         <!-- <img src="orange.jpg"> -->
                         <div class="details" >
                             <h2 class="candi_name" ><?php echo $row['candi_name'] ?></h2>
-                            <p class="candi_detail" ><?php echo $row['candi_detail'] ?></p>
+                            <!-- <p class="candi_detail" ><?php echo $row['candi_detail'] ?></p> -->
                         </div>
                     </div>
                     <div class = "region_box_btn"><a href="" onclick="voting(<?php echo $i?>)" class="button" id="<?php echo $i?>" >Vote</a></div>

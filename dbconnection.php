@@ -3,7 +3,7 @@
 $server="localhost";
 $username="root";
 $password="";
-$db="ovs";
+$db="user_details";
 
 // create the connection
 $conn=mysqli_connect($server,$username,$password,$db);

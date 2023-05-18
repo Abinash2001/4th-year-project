@@ -8,6 +8,28 @@
     {
         header("location:login.php");
     }
+
+    $sql11="select * from `key` where user_id=$userID";
+    $query11=$conn->query($sql11);
+    $row11=$query11->fetch_assoc();
+    $user_private_key=$row11['private_key'];
+    $iv_hex11=$row11['iv'];
+    $iv11=hex2bin($iv_hex11);
+    function decryptFile($sourceFile, $destinationFile, $key, $iv) {
+        $cipher = "aes-256-cbc";
+        $options = OPENSSL_RAW_DATA;
+        $fileContent = file_get_contents($sourceFile);
+        $decryptedData = openssl_decrypt($fileContent, $cipher, $key, $options, $iv);
+        file_put_contents($destinationFile, $decryptedData);
+    }
+
+    function encryptFile($sourceFile, $destinationFile, $key, $iv) {
+        $cipher = "aes-256-cbc";
+        $options = OPENSSL_RAW_DATA;
+        $fileContent = file_get_contents($sourceFile);
+        $encryptedData = openssl_encrypt($fileContent, $cipher, $key, $options, $iv);
+        file_put_contents($destinationFile, $encryptedData);
+    }
     if(isset($_POST['submit']))
     {
         $sql1="SELECT * FROM `key` WHERE id=1";
@@ -18,45 +40,49 @@
         $iv=hex2bin($iv_hex);
         $key = openssl_random_pseudo_bytes(16);
 
-        function encryptFile($sourceFile, $destinationFile, $key, $iv) {
-            $cipher = "aes-256-cbc";
-            $options = OPENSSL_RAW_DATA;
-            $fileContent = file_get_contents($sourceFile);
-            $encryptedData = openssl_encrypt($fileContent, $cipher, $key, $options, $iv);
-            file_put_contents($destinationFile, $encryptedData);
-        }
 
         // $msg=$_POST['message'];
-        if(isset($_POST['message']) && isset($_POST['file'])){
+        if(isset($_POST['message']) && isset($_FILES['file'])){
             openssl_public_encrypt($_POST['message'],$msg, $public_key);
-    
+            $msg=bin2hex($msg);
             // $file=$_POST['file'];
             $file_file=$_FILES['file'];
-            $file_file_name=$file_f_aadhar['name'];
-            $file_file_path=$file_f_aadhar['tmp_name'];
-            $destfile_file="image/".$file_f_aadhar_name;
+            $file_file_name=$file_file['name'];
+            $file_file_path=$file_file['tmp_name'];
+            $destfile_file="image/".$file_file_name;
             encryptFile($file_file_path, $destfile_file, $key, $iv);
     
-            $sql="INSERT INTO `secret_msg`(`msg`, `file`,) VALUES ('$msg','$destfile_file')";
+            $sql="INSERT INTO `report`(`msg`, `file`) VALUES ('$msg','$destfile_file')";
             mysqli_query($conn,$sql);
         }
         else if($_POST['message']){
             openssl_public_encrypt($_POST['message'],$msg, $public_key);
+            $msg=bin2hex($msg);
+            $sql="INSERT INTO `report`(`msg`) VALUES ('$msg')";
+            mysqli_query($conn,$sql);
         }
-        else if($_POST['file']){
-            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+        else if($_FILES['file']){
+            // openssl_public_encrypt($_POST['message'],$msg, $public_key);
             $file_file=$_FILES['file'];
-            $file_file_name=$file_f_aadhar['name'];
-            $file_file_path=$file_f_aadhar['tmp_name'];
-            $destfile_file="image/".$file_f_aadhar_name;
+            $file_file_name=$file_file['name'];
+            $file_file_path=$file_file['tmp_name'];
+            $destfile_file="image/".$file_file_name;
             encryptFile($file_file_path, $destfile_file, $key, $iv);
+            $sql="INSERT INTO `report`( `file`) VALUES ('$destfile_file')";
+            mysqli_query($conn,$sql);
         }
     }
 
-    $sql1="SELECT * FROM `registration` WHERE id=$userID";
-    $query1=$conn->query($sql1);
-    $row1 = $query1->fetch_assoc();
-    $sql="select * from event_registration where status=0";
+    $sql100="SELECT * FROM `registration` WHERE id=$userID";
+    $query100=$conn->query($sql100);
+    $row100 = $query100->fetch_assoc();
+
+    $encryptedFilePath = $row100['user_pic'];
+    $user_pic = "image/user_pic.jpeg"; // Specify the destination file path for the decrypted file
+    decryptFile($encryptedFilePath, $user_pic, $user_private_key, $iv11);
+
+    $currentDateTime = time();
+    $sql="select * from event_registration where $currentDateTime < UNIX_TIMESTAMP(CONCAT(end_date, ' ', end_time))";
     $query=$conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -71,7 +97,7 @@
     <link rel="stylesheet" href="Profile.css">
     <link rel="stylesheet" href="secret.css">
     <!-- <script src="Profile.js"></script> -->
-    <title>Region_page</title>
+    <title>Region</title>
 </head>
 <body>
   <!-- Navbar part -->
@@ -85,7 +111,8 @@
                 <button id="mbtn" >Contact Us</button>
             </li>
             <li>
-                <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile"  onclick="toggleMenu()">
+                <!-- <img class="profile_link" src="<?php //echo $user_pic?>" alt="Profile"  onclick="toggleMenu()"> -->
+                <img class="profile_link" src="<?php echo $row100['user_pic']?>" alt="Profile"  onclick="toggleMenu()">
             </li>
             <!-- <li>
               <a class="logout" href="logout.php">Log Out</a>
@@ -94,8 +121,8 @@
         <div class="sub-menu-wrap" id="subMenu">
             <div class="sub-menu">
               <div class="user-info">
-                    <img src="<?php echo $row1['user_pic']?>">
-                    <h3><?php echo $row1['first_name']." ".$row1['middle_name']." ".$row1['last_name']?></h3>
+                    <img src="<?php echo $row100['user_pic']?>">
+                    <h3><?php echo $row100['first_name']." ".$row100['middle_name']." ".$row100['last_name']?></h3>
                 </div>
                 <hr>
                 <a href="result_list.php" class="sub-menu-link">
@@ -156,6 +183,15 @@
         $i=0;
         while($row = $query->fetch_assoc()){
             $eventIDArray[$i]=intval($row['id']);
+            $startDateTime = strtotime($row['start_date'] . ' ' . $row['start_time']);
+            $endDateTime = strtotime($row['end_date'] . ' ' . $row['end_time']);
+      
+            $currentDateTime = time();
+            if($endDateTime > $currentDateTime){
+                $sql11="select * from vote where user_id=$userID and event_id={$row['id']} ";
+                $query11=$conn->query($sql11);
+                if(mysqli_num_rows($query11)==0)
+                {
     ?>
     <div class="region_box">
       <div class ="region_box_content"><h2><?php echo $row['event_name']?></h2>
@@ -164,8 +200,10 @@
       <div class = "region_box_btn"><a href="" onclick="index(<?php echo $i ?>)" class="button">Click Here</a></div>
     </div>
     <?php
-        $i++;
-        $_SESSION['eventIDArray']=$eventIDArray;
+            $i++;
+            $_SESSION['eventIDArray']=$eventIDArray;
+            }
+        }
     }
     // $jsonArray = json_encode($eventIDArray);
     ?>

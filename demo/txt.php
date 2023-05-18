@@ -39,7 +39,7 @@
 
 
 // Load the image data from file
-$image_data = file_get_contents("a.png");
+$image_data = file_get_contents("img1.jpeg");
 
 // Generate a new RSA key pair
 $private_key = openssl_pkey_new(array(
@@ -55,8 +55,9 @@ $ciphertext = "";
 openssl_public_encrypt($image_data, $ciphertext, $public_key);
 
 
-$encrypted_image = base64_encode($ciphertext);
-file_put_contents('encrypted_image.txt', $encrypted_image);
+// $encrypted_image = base64_encode($ciphertext);
+file_put_contents('rsa_encrypted_image.bin', $ciphertext);
+file_put_contents('rsa_encrypted_image.jpeg', $ciphertext);
 // Save the encrypted image data to a text file
 // file_put_contents("encrypted_image.txt", base64_encode($ciphertext));
 
@@ -73,9 +74,9 @@ $private_key = openssl_pkey_get_private($private_key);
 
 // Decrypt the ciphertext with the private key
 $plaintext = "";
-openssl_private_decrypt($ciphertext, $plaintext, $private_key);
+openssl_private_decrypt($image_data, $plaintext, $private_key);
 
 // Save the decrypted image data to file
-file_put_contents("decrypted_image.png", $plaintext);
+file_put_contents("decrypted_image.jpeg", $plaintext);
 
 ?>

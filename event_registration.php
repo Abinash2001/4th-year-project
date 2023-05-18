@@ -1,4 +1,9 @@
 <?php
+    // $userID=$_SESSION['userId'];
+    // if(!isset($userID))
+    // {
+    //     header("location:login.php");
+    // }
     if($_SERVER["REQUEST_METHOD"]=="POST")
     {
         include('dbconnection.php');
@@ -8,13 +13,13 @@
         // $organ_name=$_POST['organ_name'];
         // $registration=$_POST['registration'];
         // $phone=$_POST['phone'];
-        $selected=$_POST['eli'];
-        $locate=$_POST['location'];
+        // $selected=$_POST['eli'];
+        // $locate=$_POST['location'];
         $start_date=$_POST['start_date'];
         $start_time=$_POST['start_time'];
         $end_date=$_POST['end_date'];
         $end_time=$_POST['end_time'];
-        $sql="INSERT INTO `event_registration`(`event_name`, `event_detail`, `eligibility`, `location`, `start_date`, `start_time`, `end_date`, `end_time`) VALUES ('$name', '$pur_event','$selected','$locate','$start_date', '$start_time', '$end_date', '$end_time')";
+        $sql="INSERT INTO `event_registration`(`event_name`, `event_detail`,`start_date`, `start_time`, `end_date`, `end_time`) VALUES ('$name', '$pur_event','$start_date', '$start_time', '$end_date', '$end_time')";
         mysqli_query($conn,$sql);
 
 
@@ -24,13 +29,13 @@
         $row=$query->fetch_assoc();
         $max_value = $row['max_value'];
         $option_name=$_POST['option_name'];
-        $option_detail=$_POST['option_detail'];
+        // $option_detail=$_POST['option_detail'];
         
         foreach($option_name as $i=>$names)
         {
             $o_name=$names;
-            $o_detail=$option_detail[$i];
-            $sql = "INSERT INTO `candidate_details`(`candi_name`,`candi_detail`,`event_id`) VALUES ('$o_name','$o_detail','$max_value')";
+            // $o_detail=$option_detail[$i];
+            $sql = "INSERT INTO `candidate_details`(`candi_name`,`event_id`) VALUES ('$o_name','$max_value')";
             mysqli_query($conn,$sql);
         }
         
@@ -69,7 +74,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    
+    <title>Event Registration</title>
     <body>
         <form action="" method='POST'>
             <div class="Registration_container">

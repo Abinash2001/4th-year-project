@@ -55,7 +55,7 @@ $row1=$query1->fetch_assoc()
                         <!-- <img src="orange.jpg"> -->
                         <div class="details" >
                             <h2 class="candi_name" ><?php echo $row['candi_name'] ?></h2>
-                            <p class="candi_detail" ><?php echo $row['candi_detail'] ?></p>
+                            <!-- <p class="candi_detail" ><?php echo $row['candi_detail'] ?></p> -->
                         </div>
                     </div>
                     <div class = "region_box_btn"><p class="button"><?php echo $voteCountRow["vote_count"]?></p></div>
@@ -70,11 +70,20 @@ $row1=$query1->fetch_assoc()
                 // var_dump($json);
                 ?>
             </div>
+            <div class="submit">
+                <button onclick="back()">Back</button>
+            </div> 
         </div>
     </body>
 </html>
 <script type="text/javascript">
-    
+    function back(){
+        <?php
+            unset($_SESSION["eventID"]);
+            // header('location:live_event.php');  
+        ?>
+        window.location.assign("result_list.php");
+    }
     function voting(index){
     // Make an AJAX request to the PHP script
     $.ajax({
