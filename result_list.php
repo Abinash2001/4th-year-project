@@ -8,12 +8,13 @@
         header("location:login.php");
     }
 
-    $sql11="select * from `key` where user_id=$userID";
-    $query11=$conn->query($sql11);
-    $row11=$query11->fetch_assoc();
-    $user_private_key=$row11['private_key'];
-    $iv_hex11=$row11['iv'];
-    $iv11=hex2bin($iv_hex11);
+    $sql1="select * from `key` where user_id=$userID";
+    $query1=$conn->query($sql1);
+    $row1=$query1->fetch_assoc();
+    $key_hex=$row1['keys'];
+    $key=hex2bin($key_hex);
+    $iv_hex=$row1['iv'];
+    $iv=hex2bin($iv_hex);
     function decryptFile($sourceFile, $destinationFile, $key, $iv) {
         $cipher = "aes-256-cbc";
         $options = OPENSSL_RAW_DATA;
@@ -31,42 +32,41 @@
     }
     if(isset($_POST['submit']))
     {
-        $sql1="SELECT * FROM `key` WHERE id=1";
-        $query1=$conn->query($sql1);
-        $row1=$query1->fetch_assoc();
-        $public_key=$row1['public_key'];
-        $iv_hex=$row1['iv'];
-        $iv=hex2bin($iv_hex);
-        $key = openssl_random_pseudo_bytes(16);
+        $sql="select * from `key` where id=1";
+        $query=$conn->query($sql);
+        $row=$query->fetch_assoc();
+        $a_key_hex=$row['keys'];
+        $a_key=hex2bin($a_key_hex);
+        $a_iv_hex=$row['iv'];
+        $a_iv=hex2bin($a_iv_hex);
 
 
         // $msg=$_POST['message'];
         if(isset($_POST['message']) && isset($_FILES['file'])){
-            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+            $msg = openssl_encrypt($_POST['message'], 'aes-256-cbc', $a_key, OPENSSL_RAW_DATA, $a_iv);
             $msg=bin2hex($msg);
             // $file=$_POST['file'];
             $file_file=$_FILES['file'];
             $file_file_name=$file_file['name'];
             $file_file_path=$file_file['tmp_name'];
-            $destfile_file="image/".$file_file_name;
-            encryptFile($file_file_path, $destfile_file, $key, $iv);
+            $destfile_file="image/upload/".$file_file_name;
+            encryptFile($file_file_path, $destfile_file, $a_key, $a_iv);
     
             $sql="INSERT INTO `report`(`msg`, `file`) VALUES ('$msg','$destfile_file')";
             mysqli_query($conn,$sql);
         }
         else if($_POST['message']){
-            openssl_public_encrypt($_POST['message'],$msg, $public_key);
+            $msg = openssl_encrypt($_POST['message'], 'aes-256-cbc', $a_key, OPENSSL_RAW_DATA, $a_iv);
             $msg=bin2hex($msg);
             $sql="INSERT INTO `report`(`msg`) VALUES ('$msg')";
             mysqli_query($conn,$sql);
         }
         else if($_FILES['file']){
-            // openssl_public_encrypt($_POST['message'],$msg, $public_key);
             $file_file=$_FILES['file'];
             $file_file_name=$file_file['name'];
             $file_file_path=$file_file['tmp_name'];
-            $destfile_file="image/".$file_file_name;
-            encryptFile($file_file_path, $destfile_file, $key, $iv);
+            $destfile_file="image/upload/".$file_file_name;
+            encryptFile($file_file_path, $destfile_file, $a_key, $a_iv);
             $sql="INSERT INTO `report`( `file`) VALUES ('$destfile_file')";
             mysqli_query($conn,$sql);
         }
@@ -79,8 +79,8 @@
     $sql="select * from `event_registration` where $currentDateTime > UNIX_TIMESTAMP(CONCAT(end_date, ' ', end_time))";
     $query=$conn->query($sql);
     $encryptedFilePath = $row1['user_pic'];
-    $user_pic = "image/user_pic.jpg"; // Specify the destination file path for the decrypted file
-    decryptFile($encryptedFilePath, $user_pic, $user_private_key, $iv11);
+    $user_pic = "image/upload/user_pic.jpg"; // Specify the destination file path for the decrypted file
+    decryptFile($encryptedFilePath, $user_pic, $key, $iv);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,8 +107,8 @@
                 <button id="mbtn" >Contact Us</button>
             </li>
             <li>
-                <!-- <img class="profile_link" src="<?php //echo $user_pic?>" alt="Profile"  onclick="toggleMenu()"> -->
-                <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile"  onclick="toggleMenu()">
+                <img class="profile_link" src="<?php echo $user_pic?>" alt="Profile"  onclick="toggleMenu()">
+                <!-- <img class="profile_link" src="<?php //echo $row1['user_pic']?>" alt="Profile"  onclick="toggleMenu()"> -->
             </li>
             <!-- <li>
               <a class="logout" href="logout.php">Log Out</a>
@@ -117,7 +117,7 @@
         <div class="sub-menu-wrap" id="subMenu">
             <div class="sub-menu">
               <div class="user-info">
-                    <img src="<?php echo $row1['user_pic']?>">
+                    <img src="<?php echo $user_pic?>">
                     <h3><?php echo $row1['first_name']." ".$row1['middle_name']." ".$row1['last_name']?></h3>
                 </div>
                 <hr>

@@ -6,13 +6,13 @@
     {
         header("location:login.php");
     }
-    $sql1="SELECT * FROM `key` WHERE id=1";
+    $sql1="select * from `key` where user_id=$userID";
     $query1=$conn->query($sql1);
     $row1=$query1->fetch_assoc();
-    $private_key=$row1['private_key'];
+    $key_hex=$row1['keys'];
+    $key=hex2bin($key_hex);
     $iv_hex=$row1['iv'];
     $iv=hex2bin($iv_hex);
-    $key = openssl_random_pseudo_bytes(16);
     $sql="SELECT * FROM `report`";
     $query=$conn->query($sql);
 ?>
@@ -49,15 +49,16 @@
             <?php
             $emptyArray =array();
             $i=0;
+            $j=1;
             while ($row=$query->fetch_assoc())
             {
                 $emptyArray[$i]=intval($row['id']);
                 $msg_bin=hex2bin($row['msg']);
-                openssl_private_decrypt($msg_bin, $msg, $private_key);
+                $msg = openssl_decrypt($msg_bin, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
             ?>
                 <tr >
                 
-                <td class="table_data"><?php echo $row['id']; ?></td>
+                <td class="table_data"><?php echo $j; ?></td>
                 <td class="table_data"><?php echo $msg; ?></td>
                 <td class="table_data" type="Date"><?php echo $row['date']; ?></td>
                 <td class="table_data">
@@ -73,6 +74,7 @@
             </tr>
             <?php
             $i++;
+            $j++;
             }
             $_SESSION['feedbackIdArray']=$emptyArray;
             ?>

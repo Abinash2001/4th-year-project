@@ -6,10 +6,27 @@
     {
         header("location:login.php");
     }
-    // $userID=9876543210;
+
+    $sql1="select * from `key` where user_id=$userID";
+    $query1=$conn->query($sql1);
+    $row1=$query1->fetch_assoc();
+    $key_hex=$row1['keys'];
+    $key=hex2bin($key_hex);
+    $iv_hex=$row1['iv'];
+    $iv=hex2bin($iv_hex);
+    function decryptFile($sourceFile, $destinationFile, $key, $iv) {
+        $cipher = "aes-256-cbc";
+        $options = OPENSSL_RAW_DATA;
+        $fileContent = file_get_contents($sourceFile);
+        $decryptedData = openssl_decrypt($fileContent, $cipher, $key, $options, $iv);
+        file_put_contents($destinationFile, $decryptedData);
+    }
     $sql1="SELECT * FROM `registration` WHERE id=$userID";
     $query1=$conn->query($sql1);
     $row1  = $query1->fetch_assoc();
+    $encryptedFilePath = $row1['user_pic'];
+    $user_pic = "image/upload/user_pic.jpg"; // Specify the destination file path for the decrypted file
+    decryptFile($encryptedFilePath, $user_pic, $key, $iv);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +45,7 @@
         <div class="profile_container">
             <ul class="login_list">
                 <li>
-                    <!-- <img class="profile_link" src="image/new_pic1.jpg" alt="Profile Icon"> -->
-                    <img class="profile_link" src="<?php echo $row1['user_pic']?>" alt="Profile Icon">
+                    <img class="profile_link" src="<?php echo $user_pic?>" alt="Profile Icon">
                 </li>
                 <li>
                   <a class="logout" href="logout.php">Log Out</a>

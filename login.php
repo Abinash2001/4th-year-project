@@ -89,14 +89,17 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && isset($_POST['login']))
     if(mysqli_num_rows($result)==1){
         
         $sql1="select * from `key` where user_id=$userId";
-        $query1=mysqli_query($conn,$sql1);
+        $query1=$conn->query($sql1);
         $row1=$query1->fetch_assoc();
-        $private_key=$row1['private_key'];
+        $key_hex=$row1['keys'];
+        $key=hex2bin($key_hex);
+        $iv_hex=$row1['iv'];
+        $iv=hex2bin($iv_hex);
         
         $row=$result->fetch_assoc();
         $passw=$row['password'];
         $passw=hex2bin($passw);
-        openssl_private_decrypt($passw, $password, $private_key);
+        $password = openssl_decrypt($passw, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
         $num=mysqli_num_rows($result);
     
         $sql1="Select * from `registration` where `id`='$userId' && `status`='active'";

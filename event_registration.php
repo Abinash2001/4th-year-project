@@ -1,9 +1,10 @@
 <?php
-    // $userID=$_SESSION['userId'];
-    // if(!isset($userID))
-    // {
-    //     header("location:login.php");
-    // }
+    session_start();
+    $userID=$_SESSION['userId'];
+    if(!isset($userID))
+    {
+        header("location:login.php");
+    }
     if($_SERVER["REQUEST_METHOD"]=="POST")
     {
         include('dbconnection.php');

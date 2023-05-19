@@ -46,15 +46,18 @@ $query=$conn->query($sql);
             $sql1="select * from `key` where user_id={$row['id']}";
             $query1=$conn->query($sql1);
             $row1=$query1->fetch_assoc();
-            $private_key=$row1['private_key'];
-            $aadharBin=hex2bin($row['aadhar']);
-            openssl_private_decrypt($aadharBin, $aadhar, $private_key);
+            $key_hex=$row1['keys'];
+            $key=hex2bin($key_hex);
+            $iv_hex=$row1['iv'];
+            $iv=hex2bin($iv_hex);
+            $aadh=hex2bin($row['aadhar']);
+            $aadhar = openssl_decrypt($aadh, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
 
             $emptyArray[$i]=intval($row['id']);
     ?>
                 <tr>
                     <td class="table_data"><?php echo $row['first_name']." ".$row['middle_name']." ".$row['last_name'];?></td>
-                    <td class="table_data"><?php echo $aadhar; ?></td>
+                    <td class="table_data"><?php echo $aadhar?></td>
                     <td class="table_data"><?php echo $row['phone']; ?></td>
                     <td class="table_data" type="Date"><?php echo $row['apply_date'];?></td>
                     <!-- <td class="table_data1"><button class="approv"><?php echo $row['status'];?></button></td> -->

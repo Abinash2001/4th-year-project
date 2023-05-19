@@ -119,19 +119,19 @@
         <div class="footer_section container grid grid_three_column">
             <div class="section_footer_about">
                 <h3>About</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi nulla voluptatibus esse, cupiditate itaque est reprehenderit dolore quas earum quibusdam eaque eum nemo necessitatibus, animi dolores magnam id. Vitae.</p>
+                <p>We offer an innovative online voting system that empowers individuals and organizations to express their opinions easily and securely. With our user-friendly interface and robust security measures, we make it simple to make your voice heard and contribute to important decision-making processes. Join us and let your opinion count.</p>
             </div>
             <div class="section_footer_service">
                 <h3>Services</h3>
                 <ul>
                     <li>
-                        <a href="">Gov</a>
+                        <a href="">Govt.</a>
                     </li>
                     <li>
                         <a href="">private</a>
                     </li>
                     <li>
-                        <a href="">organiger</a>
+                        <a href="">organizer</a>
                     </li>
                 </ul>
             </div>

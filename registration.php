@@ -1,25 +1,9 @@
 <?php
-    $config = array(
-        "private_key_bits" => 2048,
-        "private_key_type" => OPENSSL_KEYTYPE_RSA,
-    );
-    
-    // Create the key pair
-    $res = openssl_pkey_new($config);
-    
-    // Get the private key
-    openssl_pkey_export($res, $private_key);
-    
-    // Get the public key
-    $public_key = openssl_pkey_get_details($res);
-    $public_key = $public_key["key"];
-    
-
-    // Encrypt image
-    $key = openssl_random_pseudo_bytes(16);
-    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-    $iv_hex=bin2hex($iv);
-
+    $key = openssl_random_pseudo_bytes(32);
+    $ivlen = openssl_cipher_iv_length('aes-256-cbc');
+    $iv = openssl_random_pseudo_bytes($ivlen);
+    $iv_hex = bin2hex($iv);
+    $key_hex = bin2hex($key);
 
     function encryptFile($sourceFile, $destinationFile, $key, $iv) {
         $cipher = "aes-256-cbc";
@@ -30,7 +14,6 @@
     }
 
 
-    // var_dump($public_key);
     if($_SERVER["REQUEST_METHOD"]=="POST" and isset($_POST['submit']))
     {
         include('dbconnection.php');
@@ -57,47 +40,29 @@
         $currPs=$_POST['curr_ps'];
         $currPin=$_POST['curr_pin'];
         $currCountry=$_POST['curr_country'];
-        // $aadhar=$_POST['aadhar'];
-        openssl_public_encrypt($_POST['aadhar'], $aadhar, $public_key);
+        $aadhar = openssl_encrypt($_POST['aadhar'], 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
         $aadhar=bin2hex($aadhar);
         $phone=$_POST['phone'];
         $email=$_POST['email'];
-        // $c_aadhar=$_POST['c_aadhar'];
-        // openssl_public_encrypt($_POST['c_aadhar'], $c_aadhar, $public_key);
-        // $c_aadhar=bin2hex($c_aadhar);
-        // $Aphone=$_POST['a_phone'];
-        // $Aemail=$_POST['a_email'];
-        $password=$_POST['password'];
-        openssl_public_encrypt($_POST['password'],$pass, $public_key);
+        $pass = openssl_encrypt($_POST['password'], 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
         $pass=bin2hex($pass);
-        // // $c_pass=$_POST['c_password'];
-        // openssl_public_encrypt($_POST['c_password'], $c_pass, $public_key);
-        // $c_pass=bin2hex($c_pass);
-        
         $file_f_aadhar=$_FILES['f_aadhar_pic'];
         $file_f_aadhar_name=$file_f_aadhar['name'];
         $file_f_aadhar_path=$file_f_aadhar['tmp_name'];
-        $destfile_f_aadhar="image/".$file_f_aadhar_name;
-        $destfile_f_aadhar_en="image/upload/".$file_f_aadhar_name;
-        move_uploaded_file($file_f_aadhar_path,$destfile_f_aadhar);
-        // Encrypt the uploaded file
-        encryptFile($file_f_aadhar_path, $destfile_f_aadhar_en, $key, $iv);
+        $destfile_f_aadhar="image/upload/".$file_f_aadhar_name;
+        encryptFile($file_f_aadhar_path, $destfile_f_aadhar, $key, $iv);
         
         $file_b_aadhar=$_FILES['b_aadhar_pic'];
         $file_b_aadhar_name=$file_b_aadhar['name'];
         $file_b_aadhar_path=$file_b_aadhar['tmp_name'];
-        $destfile_b_aadhar="image/".$file_b_aadhar_name;
-        $destfile_b_aadhar_en="image/upload/".$file_b_aadhar_name;
-        move_uploaded_file($file_b_aadhar_path,$destfile_b_aadhar);
-        encryptFile($file_b_aadhar_path, $destfile_b_aadhar_en, $key, $iv);
+        $destfile_b_aadhar="image/upload/".$file_b_aadhar_name;
+        encryptFile($file_b_aadhar_path, $destfile_b_aadhar, $key, $iv);
         
         $file_userPic=$_FILES['user_pic'];
         $file_userPic_name=$file_userPic['name'];
         $file_userPic_path=$file_userPic['tmp_name'];
-        $destfile_userPic="image/".$file_userPic_name;
-        $destfile_userPic_en="image/upload/".$file_userPic_name;
-        move_uploaded_file($file_userPic_path,$destfile_userPic);
-        encryptFile($file_userPic_path, $destfile_userPic_en, $key, $iv);
+        $destfile_userPic="image/upload/".$file_userPic_name;
+        encryptFile($file_userPic_path, $destfile_userPic, $key, $iv);
 
         $sql="INSERT INTO `registration`(`first_name`, `middle_name`, `last_name`, `gender`, `dob`, `age`, `p_house`, `p_area`, `p_city`, `p_district`, `p_po`, `p_ps`, `p_pin`, `p_country`, `c_house`, `c_area`, `c_city`, `c_district`, `c_po`, `c_ps`, `c_pin`, `c_country`, `password`, `aadhar`, `phone`, `email`, `f_aadhar_p`, `b_aadhar_p`, `user_pic`) VALUES ('$firstName','$middleName','$lastName','$gender','$dob','$age','$permaHouse','$permaArea','$permaCity','$permaDistrict','$permaPo','$permaPs','$permaPin','$permaCountry','$currHouse','$currArea','$currCity','$currDistrict','$currPo','$currPs','$currPin','$currCountry','$pass','$aadhar','$phone','$email','$destfile_f_aadhar','$destfile_b_aadhar','$destfile_userPic')";
         $result=mysqli_query($conn,$sql);
@@ -105,18 +70,17 @@
         $result=mysqli_query($conn,$query);
         $row = $result->fetch_assoc();
         $user_id=$row['id'];
-        $query="INSERT INTO `key`( `user_id`, `public_key`, `private_key`,`iv`) VALUES ('$user_id','$public_key','$private_key','$iv_hex')";
+        $query="INSERT INTO `key`( `user_id`, `keys`, `iv`) VALUES ('$user_id','$key_hex','$iv_hex')";
         $result=mysqli_query($conn,$query);
     
     
-        // $to_email = "receipient@gmail.com";
         $subject = "Important: Your Account Credentials";
         $body = "We hope this email finds you well. We are writing to provide you with the account credentials as requested. Please keep this information confidential and ensure it is not shared with anyone.
 
         Below are your login details:
         
         UserID: {$row['id']}
-        Password: $password
+        Password: {$_POST['password']}
         
         Thank you for choosing us. We value your trust and are committed to providing you with a secure and seamless experience. If you have any further questions or need assistance, please do not hesitate to reach out.
         
@@ -125,8 +89,8 @@
 
         if (mail($email, $subject, $body, $headers)) {
             echo "<script> alert('Email successfully sent to $email...') </script>";
+            header('location:login.php');
         } else {
-            // echo "Email sending failed...";
             echo "<script> alert('Email sending failed...') </script>";
         }
     }
@@ -220,11 +184,6 @@
                     <input type="tel"  maxlength="10" name="phone" placeholder="Phone No.*" required />
                     <input type="email" name="email" placeholder="Email*" required />
                 </div>
-                <!-- <div class="boxes_1">
-                    <input type="number" name="c_aadhar" placeholder="Confirm Aadhar No.*" required />
-                    <input type="tel" maxlength="10" name="a_phone" placeholder="Alternate Phone No.*" required />
-                    <input type="email" name="a_email" placeholder="Alternate email*" required />
-                </div> -->
             </div>
             </div>
             <h2>Create Password</h2>
